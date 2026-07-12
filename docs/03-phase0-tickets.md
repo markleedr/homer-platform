@@ -1,10 +1,46 @@
 # Home AI - Phase 0 Ticket Breakdown
-## Foundations sprint plan, weeks 1–6 - v1.0, July 2026
-### Companion to: Platform PRD v1.9, Defect Module Spec v1.0 · Updated for: homeowner BYO keys, home map, completeness gate, design language
+## Foundations sprint plan, weeks 1-6 - v1.2, July 2026
+### Companion to: Platform PRD v2.3, Defect Module Spec v1.1 · Updated for: Demo 1 milestone, script-based seeding (P0.11b), homeowner BYO keys, home map, completeness gate, design language
 
 Goal of Phase 0: a deploy pipeline that isn't copy-paste, a multi-tenant database that passes an isolation audit, working auth for all four account planes, an ingestion pipeline that can load a real home, and 18 Silky Oak migrated as tenant #1. At the end of week 6, the app does everything Silky Oak does today - but from a database, behind real auth, for any number of homes.
 
-Sizing: S <1 day, M 1–3 days, L 3–5 days. Order within each week matters - tickets assume their predecessors.
+Sizing: S <1 day, M 1-3 days, L 3-5 days. Order within each week matters - tickets assume their predecessors.
+
+---
+
+## Demo 1 milestone (end of week 3) - primary near-term target
+
+Demo 1 is the first milestone and the near-term forcing function. It is the Homer homeowner app running on the new stack, showing Mark's real house (18 Silky Oak Terrace), at a Vercel preview URL.
+
+**Demo 1 includes:**
+- Homeowner app on the new React stack, deployed to a preview URL.
+- Chat answering from database-sourced context for 18 Silky Oak (not hardcoded).
+- Dates tab.
+- House tab with the home map and hand-pinned hot dots.
+- The "Meet your home" tour.
+- Owner auth only: Mark and Beck. No other auth planes.
+- Real house data seeded by script (P0.11b), read from the Silky Oak app.jsx, not via the ingestion pipeline.
+
+**Demo 1 excludes (moves behind Demo 1):** org, portal, platform-admin and trade auth; the ingestion pipeline and templates; notifications; the defect schema and Issues tab; portal UI; archive lock; the second tenant; billing. The live Silky Oak app keeps running untouched.
+
+**Sequencing rule (v1.2):** execute Phase 0 tickets in Demo-1-first order wherever that conflicts with the original week-by-week plan below. Anything not needed for Demo 1 (org and portal auth, ingestion pipeline, notifications, defect UI) moves behind it. The week sections below remain the master ticket list and exit checks; this rule is the ordering overlay on top of them.
+
+**Silky Oak is permanent read-only reference.** Nothing is built in the silky-oak repo and no file there is edited. Its app.jsx is copied into this repo at `reference/silky-oak-app.jsx` as the read-only data source for the P0.11b seed script. The live Silky Oak app and westllen.au keep running untouched until a deliberate parity cutover much later.
+
+**Minimum ticket path to Demo 1 (in order):**
+1. **P0.1** Monorepo scaffold.
+2. **P0.2** CI/CD, trimmed to preview deploys per PR plus protected main.
+3. **P0.4** Supabase project, then **P0.5** secrets into managed env.
+4. **P0.6** core schema, Demo-1 subset: `properties`, `property_members`, `appliances`, `documents`, `key_dates`, `chats`, `chat_messages`, `service_directory`.
+5. **P0.7** RLS plus pgTAP for those tables, including chat creator-only visibility.
+6. **P0.11** homeowner auth, owner accounts for Mark and Beck, PIN gate retired.
+7. **P0.11b** seed script: 18 Silky Oak house knowledge read from app.jsx into the database.
+8. **P0.15** entitlement resolver, minimal version.
+9. **P0.16 / P0.17 / P0.18** gateway plus context assembler plus guardrails, minimal: platform key only, request logging, emergency pre-LLM rules.
+10. **P0.24b** component library subset: liquid glass tokens, icon sprite, the three button variants.
+11. **P0.25** Demo-1 subset: Chat, Dates, House with home map, and the "Meet your home" tour player.
+
+Note: the "Meet your home" tour was listed under Phase 1 in the original plan; Demo 1 pulls the tour player into Phase 0 as part of P0.25. Everything else on this path is existing Phase 0 scope, resequenced.
 
 ---
 
@@ -31,6 +67,7 @@ Sizing: S <1 day, M 1–3 days, L 3–5 days. Order within each week matters - t
 ## Week 3 - Auth: four planes
 
 - **P0.11 (M)** Homeowner auth: Supabase Auth, magic link + Google/Apple OAuth, household invites (owner invites member). PIN gate retired.
+- **P0.11b (M)** Script-based seed of 18 Silky Oak (Demo 1 data source): a repeatable seed script reads house knowledge from `reference/silky-oak-app.jsx` and writes it into the database as structured records (appliances, finishes, key dates, service directory, emergency shut-offs, home-map hot dots), owned by Mark and Beck's accounts. This exists so Demo 1 does not wait on the ingestion pipeline (P0.21). The script is the read path; the ingestion pipeline replaces it later for real onboarding. Silky Oak repo stays untouched: the script reads the in-repo reference copy only.
 - **P0.12 (M)** Org auth: email/password + MFA (TOTP) mandatory, org roles (admin/member), team invites.
 - **P0.13 (S)** Platform admin: separate route group, MFA, allow-listed accounts, every action audited.
 - **P0.14 (S)** Trade magic-token infrastructure: single-use, state-scoped, expiring tokens table + verification middleware (consumed by defect module in Phase 1).

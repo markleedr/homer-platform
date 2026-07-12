@@ -23,7 +23,9 @@ This document hands the project from the planning phase to the build phase. Read
 
 ## 2. Immediate build order (first two weeks)
 
-1. **P0.1** Monorepo restructure: `/app`, `/portal`, `/api`, `/db`, `/docs` (docs already here). Begin strangler migration of app.jsx: new code in modules, old file shrinks.
+**Near-term target is DEMO 1 (end of week 3):** the Homer homeowner app on the new stack, showing 18 Silky Oak's real data at a preview URL: Chat from database context, Dates, House with the home map (hot dots hand-pinned), and the "Meet your home" tour. Owner auth only (Mark and Beck). House data is seeded by script (P0.11b) read from `reference/silky-oak-app.jsx`, not via the ingestion pipeline. Phase 0 tickets run Demo-1-first where that conflicts with the week plan; org and portal auth, ingestion, notifications and defect UI move behind it. Full definition and the ordered ticket path: `docs/03-phase0-tickets.md` (v1.2). The silky-oak repo and westllen.au are permanent read-only reference: nothing is built or edited there.
+
+1. **P0.1** Monorepo restructure: `/app`, `/portal`, `/api`, `/db`, `/docs` (docs already here). New repo is `markleedr/homer-platform`; all Phase 0 work happens there, not in silky-oak.
 2. **P0.2** CI/CD: GitHub Actions > Vercel preview per PR, staging + production, protected main. Exit check: a one-line change reaches production via PR in under 10 minutes with rollback.
 3. **P0.3** Sentry + uptime monitoring.
 4. **P0.4** Supabase project, Sydney region, PITR on, Vault enabled, staging mirror.
