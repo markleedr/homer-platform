@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home AI · Unit 12, Reef House</title>
+<style>
+:root{
+  --ink:#182230;
+  --ink-2:rgba(24,34,48,0.62);
+  --ink-3:rgba(24,34,48,0.4);
+  --glass:rgba(255,255,255,0.58);
+  --glass-strong:rgba(255,255,255,0.78);
+  --glass-line:rgba(255,255,255,0.85);
+  --teal:#0e7d78;
+  --teal-soft:rgba(14,125,120,0.13);
+  --coral:#c04a32;
+  --coral-soft:rgba(192,74,50,0.13);
+  --amber:#9a6413;
+  --amber-soft:rgba(154,100,19,0.15);
+  --green:#2f7040;
+  --green-soft:rgba(47,112,64,0.14);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:"Avenir Next","SF Pro Text","Segoe UI",system-ui,sans-serif;
+  color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  padding:18px;
+  background:
+    radial-gradient(900px 600px at 8% -5%, rgba(64,190,220,0.32), transparent 60%),
+    radial-gradient(800px 640px at 96% 12%, rgba(255,166,120,0.30), transparent 62%),
+    radial-gradient(900px 700px at 50% 108%, rgba(120,205,170,0.32), transparent 60%),
+    radial-gradient(600px 500px at 78% 78%, rgba(190,160,255,0.20), transparent 65%),
+    linear-gradient(180deg,#f7fbfd,#eef4f6);
+  background-attachment:fixed;
+}
+svg.i{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;display:block}
+#app{
+  position:relative;width:100%;max-width:400px;height:min(780px,calc(100vh - 36px));
+  border-radius:34px;overflow:hidden;
+  background:var(--glass);
+  backdrop-filter:blur(28px) saturate(1.6);-webkit-backdrop-filter:blur(28px) saturate(1.6);
+  border:1px solid var(--glass-line);
+  box-shadow:0 1px 1px rgba(255,255,255,0.9) inset,0 20px 60px rgba(24,34,48,0.14);
+  display:flex;flex-direction:column;
+}
+#app::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(480px 260px at 85% -8%, rgba(255,255,255,0.5), transparent 60%);z-index:0}
+.topbar{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:16px 18px 8px}
+.topbar b{font-size:14px;font-weight:600}
+.views{position:relative;flex:1;overflow:hidden;z-index:1}
+.view{position:absolute;inset:0;overflow-y:auto;padding:6px 16px 96px;display:none}
+.view.on{display:block}
+.gcard{background:var(--glass-strong);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--glass-line);border-radius:16px;box-shadow:0 1px 1px rgba(255,255,255,0.85) inset,0 3px 14px rgba(24,34,48,0.05)}
+.pill{display:inline-flex;align-items:center;justify-content:center;gap:5px;font-size:11px;line-height:1.4;padding:5px 12px;border-radius:999px;white-space:nowrap;font-weight:600;border:1px solid rgba(255,255,255,0.7)}
+.pill.warn{background:var(--amber-soft);color:var(--amber)}
+.pill.info{background:var(--teal-soft);color:var(--teal)}
+.pill.ok{background:var(--green-soft);color:var(--green)}
+.pill.mute{background:rgba(255,255,255,0.6);color:var(--ink-2)}
+.card-line{display:flex;align-items:center;gap:11px;padding:12px 13px;margin-bottom:9px}
+.card-line .ic{flex-shrink:0;width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;background:rgba(255,255,255,0.7);border:1px solid var(--glass-line);color:var(--ink-2)}
+.card-line .tx{flex:1;min-width:0}
+.card-line .tx b{display:block;font-size:12.5px;font-weight:600}
+.card-line .tx span{display:block;font-size:11px;color:var(--ink-2);margin-top:2px}
+.card-line.danger{background:linear-gradient(135deg,rgba(192,74,50,0.14),rgba(255,166,120,0.16))}
+.card-line.danger .tx b,.card-line.danger .tx span{color:var(--coral)}
+.card-line.danger .ic{color:var(--coral)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 15px;border-radius:14px;border:1px solid var(--glass-line);background:var(--glass-strong);font-size:12.5px;font-weight:600;font-family:inherit;color:var(--ink);cursor:pointer;box-shadow:0 1px 1px rgba(255,255,255,0.9) inset,0 3px 10px rgba(24,34,48,0.06)}
+.btn .bic{flex-shrink:0;width:18px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.btn.primary{background:linear-gradient(135deg,#12938d,#0b6d68);border-color:rgba(255,255,255,0.4);color:#fff;box-shadow:0 1px 1px rgba(255,255,255,0.35) inset,0 6px 18px rgba(14,125,120,0.35)}
+.btn.ghost{background:rgba(255,255,255,0.4);color:var(--ink-2);box-shadow:none}
+.btn.listy{justify-content:flex-start;text-align:left;width:100%}
+.btn:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.btn:active{transform:translateY(1px)}
+.hint{font-size:10.5px;color:var(--ink-3);text-align:center;margin-top:7px}
+.section-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3);font-weight:700;margin:16px 4px 8px}
+/* chat */
+.nudges{display:flex;gap:7px;overflow-x:auto;margin:4px 0 12px;scrollbar-width:none}
+.nudges::-webkit-scrollbar{display:none}
+.bubble{font-size:12.5px;line-height:1.55;padding:10px 13px;max-width:86%;margin-bottom:9px}
+.bubble.me{background:linear-gradient(135deg,rgba(14,125,120,0.16),rgba(64,190,220,0.18));color:#0a5f5b;border:1px solid rgba(255,255,255,0.7);border-radius:15px 15px 4px 15px;margin-left:auto;font-weight:500}
+.bubble.home{background:rgba(255,255,255,0.72);color:var(--ink-2);border:1px solid var(--glass-line);border-radius:15px 15px 15px 4px}
+.chatinput{position:absolute;left:14px;right:14px;bottom:78px;display:flex;align-items:center;gap:9px;border:1px solid var(--glass-line);background:rgba(255,255,255,0.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:999px;padding:8px 10px 8px 16px;box-shadow:0 1px 1px rgba(255,255,255,0.9) inset,0 6px 18px rgba(24,34,48,0.10);z-index:3;color:var(--ink-3);font-size:14px}
+.chatinput input{flex:1;border:none;background:transparent;font-family:inherit;font-size:13px;color:var(--ink);outline:none}
+.chatinput button{border:none;background:linear-gradient(135deg,#12938d,#0b6d68);color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px}
+.suggest{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px}
+.suggest button{border:1px solid var(--glass-line);background:rgba(255,255,255,0.6);border-radius:999px;padding:6px 12px;font-size:11px;font-family:inherit;color:var(--teal);font-weight:600;cursor:pointer}
+/* tabbar */
+.tabbar{position:absolute;left:14px;right:14px;bottom:14px;display:flex;justify-content:space-around;align-items:center;padding:10px 8px;border-radius:999px;background:rgba(255,255,255,0.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--glass-line);box-shadow:0 1px 1px rgba(255,255,255,0.9) inset,0 8px 22px rgba(24,34,48,0.12);z-index:4}
+.tab{text-align:center;color:var(--ink-3);font-size:9.5px;font-weight:600;background:none;border:none;font-family:inherit;cursor:pointer;padding:2px 10px}
+.tab .ic{font-size:17px;display:flex;justify-content:center;margin-bottom:3px}
+.tab.on{color:var(--teal)}
+/* issues */
+.issue{padding:11px 13px;margin-bottom:9px}
+.issue .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.issue .top b{font-size:12.5px;font-weight:600;min-width:0}
+.issue span.sub{display:block;font-size:11px;color:var(--ink-2);margin-top:4px}
+.src{font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--teal);font-weight:700}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px}
+.tile{padding:12px 8px;text-align:center;color:var(--ink-2);cursor:pointer}
+.tile .ic{font-size:17px;display:flex;justify-content:center}
+.tile p{font-size:11px;margin-top:6px;font-weight:600;color:var(--ink)}
+/* tour */
+.orb{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--teal);margin:22px auto 12px;background:linear-gradient(135deg,rgba(64,190,220,0.35),rgba(120,205,170,0.35));border:1px solid var(--glass-line);box-shadow:0 1px 1px rgba(255,255,255,0.9) inset,0 8px 22px rgba(14,125,120,0.22)}
+.chapter{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;font-size:12px;color:var(--ink-2);background:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.75);margin-bottom:7px;cursor:pointer}
+.chapter .cnum{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,0.75);color:var(--ink-2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
+.chapter.on{background:var(--teal-soft);border-color:rgba(255,255,255,0.9)}
+.chapter.on .cnum{background:var(--teal);color:#fff}
+.chapter.done .cnum{background:var(--green-soft);color:var(--green)}
+.chapter .ct{flex:1;font-weight:500;color:var(--ink)}
+.chapter .cd{font-size:10px;color:var(--ink-3)}
+/* map */
+#mapwrap{position:relative;margin-bottom:10px}
+#floor{width:100%;height:auto;display:block;border-radius:16px}
+.dot{cursor:pointer}
+.dot circle.core{fill:#fff;stroke-width:2}
+.dot circle.ring{fill:none;stroke-width:2;opacity:0.5}
+@media (prefers-reduced-motion:no-preference){
+  .dot circle.ring{animation:pulse 2.2s ease-out infinite}
+  @keyframes pulse{0%{r:7;opacity:0.55}70%{r:15;opacity:0}100%{r:15;opacity:0}}
+}
+.sheet{position:absolute;left:12px;right:12px;bottom:88px;z-index:5;padding:13px 14px;border-radius:18px;background:rgba(255,255,255,0.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--glass-line);box-shadow:0 12px 34px rgba(24,34,48,0.18);display:none}
+.sheet.on{display:block}
+.sheet b{font-size:13px;font-weight:600;display:block}
+.sheet p{font-size:11.5px;color:var(--ink-2);line-height:1.55;margin-top:4px}
+.sheet .close{position:absolute;top:9px;right:11px;border:none;background:none;font-size:14px;color:var(--ink-3);cursor:pointer;font-family:inherit}
+/* triage */
+.assess-step{display:flex;align-items:center;gap:10px;padding:6px 2px;font-size:12px;color:var(--ink-2);opacity:0;transition:opacity .35s}
+.assess-step.on{opacity:1}
+.assess-step .st{flex-shrink:0;width:18px;display:flex;align-items:center;justify-content:center}
+.spin{width:13px;height:13px;border:2px solid var(--teal-soft);border-top-color:var(--teal);border-radius:50%}
+@media (prefers-reduced-motion:no-preference){.spin{animation:rot .8s linear infinite}@keyframes rot{to{transform:rotate(360deg)}}}
+.photobox{border:1.5px dashed rgba(24,34,48,0.25);border-radius:14px;min-height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--ink-2);font-size:12px;cursor:pointer;background:rgba(255,255,255,0.45)}
+.back{display:inline-flex;align-items:center;gap:6px;border:none;background:none;font-family:inherit;font-size:12px;font-weight:600;color:var(--teal);cursor:pointer;padding:6px 2px;margin-bottom:4px}
+.fade{animation:fadein .3s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.fade{animation:none}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-volume" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9.2 9.2 0 0 1 0 13"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v6"/><path d="M15 3v6"/><path d="M6 9h12v3a6 6 0 0 1-12 0z"/><path d="M12 18v3"/></symbol>
+<symbol id="i-building" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h.01M15 7h.01M9 11h.01M15 11h.01M9 15h.01M15 15h.01"/><path d="M10 21v-3h4v3"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.6-3.4 7.6-8 9-4.6-1.4-8-4.4-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8A8.5 8.5 0 0 1 12.5 3 8.5 8.5 0 0 1 21 11.5z"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5l13 7.5-13 7.5z"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></symbol>
+<symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="1.5" width="6" height="13" rx="3"/><path d="M19 10v1.5a7 7 0 0 1-14 0V10"/><path d="M12 18.5v4"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></symbol>
+<symbol id="i-recycle" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></symbol>
+<symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3c2.2 3.2 5 5.4 5 9a5 5 0 1 1-10 0c0-1.9.9-3.4 2.1-4.9.4 1.5 1.4 2.3 1.4 2.3C10.7 7.4 12 3 12 3z"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
+<symbol id="i-plan" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></symbol>
+<symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 1 9-9c0 2.2-1.6 3-3 3h-2a2 2 0 0 0-2 2c0 1 .6 1.4.6 2.4S13.4 21 12 21z"/><path d="M7.5 10.5h.01M12 7.5h.01M16.5 10.5h.01"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4"/><path d="M10.3 12.7L21 2"/><path d="M15 8l3 3"/><path d="M18 5l2 2"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+<symbol id="i-folder" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+<symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 20z"/><path d="M9 21.5V13h6v8.5"/></symbol>
+<symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></symbol>
+<symbol id="i-map" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+<symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h12"/><path d="M9 12h12"/><path d="M9 18h12"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+</defs></svg>
+
+<div id="app">
+  <div class="topbar">
+    <b id="title">Unit 12, Reef House</b>
+    <span class="pill mute"><svg class="i" style="width:13px;height:13px"><use href="#i-cloud"/></svg>21°</span>
+  </div>
+  <div class="views" id="views"></div>
+  <nav class="tabbar" id="tabbar" aria-label="Main">
+    <button class="tab on" data-v="chat"><span class="ic"><svg class="i"><use href="#i-chat"/></svg></span>Chat</button>
+    <button class="tab" data-v="dates"><span class="ic"><svg class="i"><use href="#i-calendar"/></svg></span>Dates</button>
+    <button class="tab" data-v="house"><span class="ic"><svg class="i"><use href="#i-home"/></svg></span>House</button>
+    <button class="tab" data-v="issues"><span class="ic"><svg class="i"><use href="#i-tool"/></svg></span>Issues</button>
+  </nav>
+</div>
+
+<script>
+const V = document.getElementById('views');
+const ic = n => `<svg class="i"><use href="#i-${n}"/></svg>`;
+
+/* ---------- data ---------- */
+const dots = [
+  {id:'water', x:118, y:210, c:'#c04a32', t:'Water shut-off', d:'In the laundry cupboard, low on the left wall. Turn the lever a quarter-turn clockwise to close. Shuts water to the whole unit.'},
+  {id:'board', x:318, y:96,  c:'#c04a32', t:'Switchboard', d:'Hallway cupboard beside the entry. Safety switches are labelled. If power trips, reset the middle switch first.'},
+  {id:'hws',   x:322, y:212, c:'#0e7d78', t:'Hot water system', d:'Rheem 491, balcony service cupboard. Warranty until Aug 2031. Isolation tap is on the cold inlet, right side.'},
+  {id:'nbn',   x:236, y:96,  c:'#0e7d78', t:'NBN connection', d:'Fibre wall outlet in the study nook. The building runs FTTP. Router power point is directly below.'},
+  {id:'exit',  x:52,  y:96,  c:'#9a6413', t:'Fire exit: stair B', d:'Out the front door, turn left, 8 metres. Never use the lift in a fire. Assembly point is the Reef St forecourt.'}
+];
+
+const tourChapters = [
+  {t:'Welcome from Sunrise', d:'0:25', cap:'"Welcome to Unit 12, Reef House. I\'m your apartment\'s guide, built by Sunrise Developments. This takes about four minutes."'},
+  {t:'Shut-offs and fire exits', d:'0:45', cap:'"Your water shut-off is in the laundry cupboard, low on the left. Your fire exit is stair B, left of your front door. Let\'s look at both on your plan."', danger:true},
+  {t:'Your appliances', d:'1:05', cap:'"Your Bosch dishwasher\'s eco cycle runs over three hours. That\'s normal. Your split system filters want a clean each quarter, and I\'ll remind you."'},
+  {t:'Your building', d:'0:50', cap:'"The recycling room is on B1, collections Monday. Visitor parking is bays 1 to 6. The pool runs 6am to 9pm and your fob opens the gate."'},
+  {t:'Warranties at a glance', d:'0:35', cap:'"Your 12-month defect period ends 2 June 2027. Each appliance carries its own warranty, and I track every one of them."'},
+  {t:'Just ask me anything', d:'0:20', cap:'"That\'s the tour. From here, just ask: where do visitors park? Or snap a photo of anything that worries you."'}
+];
+
+const chatReplies = [
+  {k:['park','visitor'], r:'Visitor bays 1 to 6 are on basement level 1, just left of the roller door. Book through your guest code and they get 4 hours.'},
+  {k:['pool'], r:'The pool runs 6am to 9pm daily. Your fob opens the gate. No glass past the gate, house rule 14.'},
+  {k:['bin','recycl','rubbish','waste'], r:'The recycling room is on level B1. General waste any time, recycling collected Mondays, glass crate Thursdays.'},
+  {k:['dishwash'], r:'Your Bosch SMS6HCI01A eco cycle runs about 3 hours 15. That\'s normal, it trades time for water and power. Warranty runs to Aug 2028.'},
+  {k:['water','leak','valve','shut'], r:'Your water shut-off is in the laundry cupboard, low on the left wall. Quarter-turn clockwise closes it. Want me to show it on your plan? It\'s pinned under House, Home map.'},
+  {k:['wifi','nbn','internet'], r:'The building runs fibre to the premises. Your NBN outlet is in the study nook, pinned on your home map. Any provider on the NBN network can connect it.'},
+  {k:['dana','manager'], r:'Dana is your building manager, on site Monday to Friday, 7am to 3pm. Her contact card is under House. Common-area issues go straight to her through the Issues tab.'},
+  {k:['warrant','defect period'], r:'Your 12-month defect period ends 2 June 2027, so there\'s 11 months left to report defects to Sunrise. Structural cover runs to December 2032. Appliance warranties are tracked per item under House.'}
+];
+const chatFallback = 'Good question. In the full app I\'d answer from your unit\'s documents and the Reef House building guide. Try asking about visitor parking, the pool, bins, your dishwasher, or where the water shut-off is.';
+
+/* ---------- views ---------- */
+const views = {};
+
+views.chat = `
+  <div class="nudges">
+    <span class="pill warn">Lift B out Tue 9 to 12</span>
+    <span class="pill mute">AC filter due Sunday</span>
+    <span class="pill info">Tour: 2 chapters left</span>
+  </div>
+  <div id="chatlog">
+    <div class="bubble home">Morning. Bins note: the glass crate goes down to B1 tonight. Anything I can help with?</div>
+    <div class="suggest" id="suggests">
+      <button data-q="Where do visitors park?">Visitor parking</button>
+      <button data-q="What are the pool hours?">Pool hours</button>
+      <button data-q="Where is the water shut-off?">Water shut-off</button>
+    </div>
+  </div>`;
+
+views.dates = `
+  <div class="card-line gcard" style="background:linear-gradient(135deg,rgba(154,100,19,0.12),rgba(255,196,110,0.20))">
+    <span class="ic" style="color:var(--amber)">${ic('recycle')}</span>
+    <div class="tx"><b>Recycling room, level B1</b><span>Collection Mondays · glass crate Thursdays</span></div>
+  </div>
+  <div class="card-line gcard" data-done="0" id="taskAC" style="cursor:pointer">
+    <span class="ic" id="taskACbox" style="background:transparent;border:1.5px solid rgba(24,34,48,0.25);border-radius:8px;width:20px;height:20px;margin:0 5px;color:var(--green)"></span>
+    <div class="tx"><b>Clean AC return-air filter</b><span id="taskACsub">Due Sunday · repeats quarterly</span></div>
+  </div>
+  <div class="card-line gcard">
+    <span class="ic" style="color:var(--teal)">${ic('shield')}</span>
+    <div class="tx"><b>12-month defect period</b><span>Ends 2 Jun 2027 · 11 months left</span></div>
+  </div>
+  <div class="card-line gcard">
+    <span class="ic" style="color:var(--coral)">${ic('flame')}</span>
+    <div class="tx"><b>Fire alarm test, whole building</b><span>Wed 22 Jul, 10am · <span class="src">from Dana</span></span></div>
+  </div>
+  <div class="card-line gcard">
+    <span class="ic">${ic('file')}</span>
+    <div class="tx"><b>Contents insurance renewal</b><span>Due September · I\'ll check the market first</span></div>
+  </div>`;
+
+views.house = `
+  <div class="card-line gcard danger" style="cursor:pointer" onclick="openMap('water')">
+    <span class="ic">${ic('alert')}</span>
+    <div class="tx"><b>Shut-offs and fire exits</b><span>Water valve: laundry cupboard · exit: stair B · tap to view on plan</span></div>
+  </div>
+  <div class="tiles">
+    <div class="tile gcard" onclick="openMap()"><span class="ic">${ic('map')}</span><p>Home map</p></div>
+    <div class="tile gcard"><span class="ic">${ic('plug')}</span><p>Appliances</p></div>
+    <div class="tile gcard"><span class="ic">${ic('palette')}</span><p>Finishes</p></div>
+    <div class="tile gcard"><span class="ic">${ic('key')}</span><p>Guest codes</p></div>
+  </div>
+  <div class="card-line gcard" style="cursor:pointer" onclick="show('tour')">
+    <span class="ic" style="color:var(--teal)">${ic('volume')}</span>
+    <div class="tx"><b>Meet your apartment</b><span>Replay the welcome tour · 4 min, 6 chapters</span></div>
+  </div>
+  <div class="card-line gcard">
+    <span class="ic">${ic('building')}</span>
+    <div class="tx"><b>Reef House building</b><span>Waste, pool, gym, visitor parking, NBN</span></div>
+  </div>
+  <div class="card-line gcard">
+    <span class="ic">${ic('user')}</span>
+    <div class="tx"><b>Building manager · Dana</b><span>On site Mon to Fri, 7am to 3pm</span></div>
+    <span style="flex-shrink:0;color:var(--teal)">${ic('phone')}</span>
+  </div>
+  <div class="card-line gcard">
+    <span class="ic">${ic('folder')}</span>
+    <div class="tx"><b>My documents</b><span style="display:flex;align-items:center;gap:4px">Yours to add and edit · builder set locked <svg class="i" style="width:10px;height:10px"><use href="#i-lock"/></svg></span></div>
+  </div>`;
+
+views.issues = `
+  <button class="btn primary" style="width:100%" onclick="show('triage')"><span class="bic">${ic('camera')}</span>Report an issue</button>
+  <p class="hint">In my unit goes to Sunrise · common areas go to Dana</p>
+  <div style="margin-top:10px">
+    <div class="issue gcard">
+      <div class="top"><b>Balcony door drainage</b><span class="pill info">In progress</span></div>
+      <span class="sub">Unit defect · waterproofer booked Thu 16 Jul</span>
+    </div>
+    <div class="issue gcard">
+      <div class="top"><b>Carpark gate sensor</b><span class="pill warn">With building</span></div>
+      <span class="sub">Common area · reported by 3 residents</span>
+    </div>
+    <div class="issue gcard">
+      <div class="top"><b>Ensuite grout cracking</b><span class="pill ok">Fixed</span></div>
+      <span class="sub">Confirm the fix to close</span>
+    </div>
+  </div>`;
+
+/* home map */
+views.map = `
+  <button class="back" onclick="show('house')">${ic('back')} House</button>
+  <p style="font-size:13px;font-weight:600;margin:2px 4px 8px">Home map</p>
+  <div id="mapwrap" class="gcard" style="padding:10px">
+    <svg id="floor" viewBox="0 0 380 300" role="img" aria-label="Unit 12 floor plan with key locations">
+      <rect x="20" y="20" width="340" height="260" rx="8" fill="rgba(255,255,255,0.55)" stroke="rgba(24,34,48,0.35)" stroke-width="2"/>
+      <line x1="150" y1="20" x2="150" y2="130" stroke="rgba(24,34,48,0.3)" stroke-width="2"/>
+      <line x1="20" y1="130" x2="200" y2="130" stroke="rgba(24,34,48,0.3)" stroke-width="2"/>
+      <line x1="200" y1="130" x2="200" y2="180" stroke="rgba(24,34,48,0.3)" stroke-width="2"/>
+      <line x1="270" y1="20" x2="270" y2="130" stroke="rgba(24,34,48,0.3)" stroke-width="2"/>
+      <line x1="270" y1="130" x2="360" y2="130" stroke="rgba(24,34,48,0.3)" stroke-width="2"/>
+      <line x1="90" y1="130" x2="90" y2="280" stroke="rgba(24,34,48,0.3)" stroke-width="2"/>
+      <line x1="270" y1="180" x2="360" y2="180" stroke="rgba(24,34,48,0.3)" stroke-width="2"/>
+      <line x1="270" y1="180" x2="270" y2="280" stroke="rgba(24,34,48,0.3)" stroke-width="2"/>
+      <text x="85" y="70" font-size="11" fill="rgba(24,34,48,0.5)" font-weight="600">Bed 2</text>
+      <text x="185" y="60" font-size="11" fill="rgba(24,34,48,0.5)" font-weight="600">Study</text>
+      <text x="295" y="70" font-size="11" fill="rgba(24,34,48,0.5)" font-weight="600">Bed 1</text>
+      <text x="45" y="200" font-size="11" fill="rgba(24,34,48,0.5)" font-weight="600">Ldry</text>
+      <text x="150" y="215" font-size="11" fill="rgba(24,34,48,0.5)" font-weight="600">Living · Kitchen</text>
+      <text x="290" y="235" font-size="11" fill="rgba(24,34,48,0.5)" font-weight="600">Balcony</text>
+      <g id="dotlayer"></g>
+    </svg>
+    <div class="sheet" id="sheet">
+      <button class="close" onclick="closeSheet()" aria-label="Close">✕</button>
+      <b id="sheetT"></b><p id="sheetD"></p>
+    </div>
+  </div>
+  <p class="hint">Red: emergency · teal: services · amber: exits. Positions confirmed by Sunrise at handover.</p>`;
+
+/* tour */
+views.tour = `
+  <button class="back" onclick="show('house')">${ic('back')} House</button>
+  <div class="orb">${ic('volume')}</div>
+  <p style="font-size:15px;font-weight:600;text-align:center">Meet your apartment</p>
+  <p style="font-size:12px;color:var(--ink-2);text-align:center;margin:4px 0 12px">Unit 12, Reef House · about 4 minutes</p>
+  <div class="gcard" style="padding:13px;margin-bottom:11px">
+    <p id="tourCap" style="font-size:12.5px;line-height:1.65;color:var(--ink-2)"></p>
+  </div>
+  <div id="tourList"></div>
+  <div style="display:flex;gap:9px;margin-top:12px">
+    <button class="btn primary" style="flex:1" id="tourBtn" onclick="tourNext()"><span class="bic">${ic('play')}</span>Next chapter</button>
+    <button class="btn ghost" onclick="show('chat')">Finish later</button>
+  </div>`;
+
+/* triage steps */
+views.triage = `
+  <button class="back" onclick="show('issues')">${ic('back')} Issues</button>
+  <div id="tri" class="fade"></div>`;
+
+/* ---------- render + router ---------- */
+Object.entries(views).forEach(([k,html])=>{
+  const d=document.createElement('div');d.className='view';d.id='v-'+k;d.innerHTML=html;V.appendChild(d);
+});
+const chatBar=document.createElement('div');
+chatBar.className='chatinput';chatBar.id='chatbar';
+chatBar.innerHTML=`${ic('camera')}<input id="chatin" placeholder="Ask your apartment anything" aria-label="Message">${ic('mic')}<button onclick="sendChat()" aria-label="Send">${ic('send')}</button>`;
+document.getElementById('app').appendChild(chatBar);
+
+const tabs=[...document.querySelectorAll('.tab')];
+function show(v){
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));
+  document.getElementById('v-'+v).classList.add('on');
+  tabs.forEach(t=>t.classList.toggle('on',t.dataset.v===v));
+  chatBar.style.display = v==='chat'?'flex':'none';
+  if(v==='map') buildDots();
+  if(v==='tour') renderTour();
+  if(v==='triage') triGo('capture');
+}
+tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.v)));
+
+/* ---------- chat ---------- */
+function addBubble(txt,who){
+  const log=document.getElementById('chatlog');
+  const b=document.createElement('div');b.className='bubble '+who+' fade';b.textContent=txt;
+  log.appendChild(b);
+  document.getElementById('v-chat').scrollTop=1e6;
+}
+function reply(q){
+  const low=q.toLowerCase();
+  const hit=chatReplies.find(r=>r.k.some(k=>low.includes(k)));
+  setTimeout(()=>addBubble(hit?hit.r:chatFallback,'home'),650);
+}
+function sendChat(){
+  const inp=document.getElementById('chatin');
+  const q=inp.value.trim();if(!q)return;
+  addBubble(q,'me');inp.value='';reply(q);
+}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.activeElement.id==='chatin')sendChat()});
+document.getElementById('suggests').addEventListener('click',e=>{
+  const q=e.target.dataset.q;if(!q)return;
+  addBubble(q,'me');reply(q);
+});
+
+/* ---------- dates task ---------- */
+document.getElementById('taskAC').addEventListener('click',function(){
+  if(this.dataset.done==='1')return;
+  this.dataset.done='1';
+  document.getElementById('taskACbox').innerHTML='<svg class="i" style="width:13px;height:13px"><use href="#i-check"/></svg>';
+  document.getElementById('taskACsub').textContent='Done. Rescheduled for October.';
+});
+
+/* ---------- map ---------- */
+function buildDots(){
+  const layer=document.getElementById('dotlayer');
+  if(layer.childElementCount)return;
+  dots.forEach(d=>{
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','dot');g.setAttribute('tabindex','0');g.setAttribute('role','button');g.setAttribute('aria-label',d.t);
+    g.innerHTML=`<circle class="ring" cx="${d.x}" cy="${d.y}" r="7" stroke="${d.c}"/><circle class="core" cx="${d.x}" cy="${d.y}" r="6" stroke="${d.c}"/>`;
+    const open=()=>{document.getElementById('sheetT').textContent=d.t;document.getElementById('sheetD').textContent=d.d;document.getElementById('sheet').classList.add('on')};
+    g.addEventListener('click',open);
+    g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')open()});
+    layer.appendChild(g);
+  });
+}
+function openMap(focus){show('map');if(focus){const d=dots.find(x=>x.id===focus);if(d){setTimeout(()=>{document.getElementById('sheetT').textContent=d.t;document.getElementById('sheetD').textContent=d.d;document.getElementById('sheet').classList.add('on')},250)}}}
+function closeSheet(){document.getElementById('sheet').classList.remove('on')}
+
+/* ---------- tour ---------- */
+let tourAt=1;
+function renderTour(){
+  const list=document.getElementById('tourList');
+  list.innerHTML=tourChapters.map((c,i)=>`
+    <div class="chapter ${i<tourAt?'done':''} ${i===tourAt?'on':''}" onclick="tourTo(${i})">
+      <span class="cnum">${i<tourAt?'<svg class="i" style="width:11px;height:11px"><use href="#i-check"/></svg>':i+1}</span>
+      <span class="ct" ${c.danger?'style="color:var(--coral)"':''}>${c.t}</span><span class="cd">${c.d}</span>
+    </div>`).join('');
+  document.getElementById('tourCap').textContent=tourChapters[tourAt].cap;
+  document.getElementById('tourBtn').innerHTML= tourAt>=tourChapters.length-1
+    ? '<span class="bic"><svg class="i"><use href="#i-chat"/></svg></span>Start chatting'
+    : '<span class="bic"><svg class="i"><use href="#i-play"/></svg></span>Next chapter';
+}
+function tourTo(i){tourAt=i;renderTour()}
+function tourNext(){ if(tourAt>=tourChapters.length-1){show('chat');return} tourAt++;renderTour() }
+
+/* ---------- triage ---------- */
+const tri=()=>document.getElementById('tri');
+function triGo(step){
+  if(step==='capture'){tri().innerHTML=`
+    <p style="font-size:14px;font-weight:600;margin:2px 2px 4px">What\'s the issue?</p>
+    <p style="font-size:11.5px;color:var(--ink-2);margin:0 2px 10px">A photo helps me see what you\'re seeing</p>
+    <div class="photobox" onclick="triGo('assess')">${ic('camera')}<span>Take a photo or two</span></div>
+    <div style="display:flex;gap:9px;margin-top:10px">
+      <button class="btn" style="flex:1" onclick="triGo('assess')"><span class="bic">${ic('folder')}</span>Library</button>
+      <button class="btn" style="flex:1" onclick="triGo('assess')"><span class="bic">${ic('mic')}</span>Describe it</button>
+    </div>
+    <p class="hint">No photo possible? Just describe it instead</p>`;}
+  if(step==='assess'){
+    tri().innerHTML=`
+      <div class="gcard" style="height:110px;display:flex;align-items:center;justify-content:center;color:var(--ink-3);margin-bottom:12px">${ic('camera')}</div>
+      <div id="asteps">
+        ${['Looking at your photo','Checking your unit\'s profile: settled Jun 2026','Checking finishes and materials','Checking your warranty periods','Comparing with building reports'].map(t=>`<div class="assess-step"><span class="st"><span class="spin"></span></span>${t}</div>`).join('')}
+      </div>`;
+    const steps=[...tri().querySelectorAll('.assess-step')];
+    steps.forEach((el,i)=>{
+      setTimeout(()=>el.classList.add('on'), i*650+150);
+      setTimeout(()=>{el.querySelector('.st').innerHTML='<svg class="i" style="width:13px;height:13px;color:var(--green)"><use href="#i-check"/></svg>'}, i*650+700);
+    });
+    setTimeout(()=>triGo('card'), steps.length*650+600);
+  }
+  if(step==='card'){tri().innerHTML=`
+    <div class="gcard fade" style="padding:13px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;color:var(--teal)">${ic('home')}<b style="font-size:12.5px;color:var(--ink)">What I can see</b></div>
+      <p style="font-size:12px;color:var(--ink-2);line-height:1.6;margin-bottom:10px">A hairline gap where the skirting meets the wall. Common settling in a building\'s first year, not a structural concern.</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="pill mute">Cosmetic</span><span class="pill info">12-month defect period</span></div>
+    </div>
+    <div class="gcard" style="padding:13px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;color:var(--green)">${ic('check')}<b style="font-size:12.5px;color:var(--ink)">Nothing to worry about</b></div>
+      <p style="font-size:12px;color:var(--ink-2);line-height:1.6;margin-bottom:10px">This will close up as the building settles. A bead of flexible gap filler fixes it in 10 minutes. Here\'s how.</p>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <button class="btn listy"><span class="bic">${ic('list')}</span>Show me the steps</button>
+        <button class="btn listy"><span class="bic">${ic('camera')}</span>Watch it: start a photo log</button>
+        <button class="btn listy"><span class="bic">${ic('calendar')}</span>Remind me in 3 months</button>
+      </div>
+      <div style="border-top:1px solid rgba(24,34,48,0.08);margin-top:11px;padding-top:10px">
+        <button class="btn ghost" style="width:100%" onclick="triGo('report')">Report to Sunrise Developments anyway</button>
+        <p class="hint">Always your call. Reporting is never blocked</p>
+      </div>
+    </div>`;}
+  if(step==='report'){tri().innerHTML=`
+    <p style="font-size:14px;font-weight:600;margin:2px 2px 10px">Report to Sunrise Developments</p>
+    <div class="gcard" style="padding:13px;font-size:12px;display:flex;flex-direction:column;gap:9px">
+      <div><p style="font-size:10px;color:var(--ink-3)">Issue</p><p>Skirting gap, hallway near linen press</p></div>
+      <div><p style="font-size:10px;color:var(--ink-3)">Location</p><p>Hallway · tapped on home map</p></div>
+      <div><p style="font-size:10px;color:var(--ink-3)">Photos</p><div style="display:flex;gap:7px;margin-top:4px"><div class="gcard" style="width:38px;height:38px"></div><div class="gcard" style="width:38px;height:38px"></div></div></div>
+      <div><p style="font-size:10px;color:var(--ink-3)">Warranty status</p><p>In 12-month defect period</p></div>
+    </div>
+    <p style="font-size:11px;color:var(--ink-2);margin:9px 2px">Everything\'s editable. Tap any field to change it before sending.</p>
+    <button class="btn primary" style="width:100%" onclick="triGo('sent')">Send report</button>
+    <p class="hint">You\'ll see its status in Issues, every step</p>`;}
+  if(step==='sent'){tri().innerHTML=`
+    <div class="orb" style="color:var(--green);background:linear-gradient(135deg,rgba(120,205,170,0.35),rgba(64,190,220,0.3))">${ic('check')}</div>
+    <p style="font-size:15px;font-weight:600;text-align:center">Sent to Sunrise</p>
+    <p style="font-size:12px;color:var(--ink-2);text-align:center;line-height:1.6;margin:6px 12px 14px">Logged 4:12pm with your photos and the assessment. Sunrise typically responds within 5 business days, and I\'ll nudge you the moment anything changes.</p>
+    <button class="btn primary" style="width:100%" onclick="show('issues')">Back to Issues</button>`;}
+}
+
+show('chat');
+</script>
+</body>
+</html>

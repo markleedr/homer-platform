@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homer · Developer Portal · Sunrise Developments</title>
+<style>
+:root{
+  --ink:#182230;--ink-2:rgba(24,34,48,0.62);--ink-3:rgba(24,34,48,0.4);
+  --glass:rgba(255,255,255,0.58);--glass-strong:rgba(255,255,255,0.78);--glass-line:rgba(255,255,255,0.85);
+  --teal:#0e7d78;--teal-soft:rgba(14,125,120,0.13);
+  --coral:#c04a32;--coral-soft:rgba(192,74,50,0.13);
+  --amber:#9a6413;--amber-soft:rgba(154,100,19,0.15);
+  --green:#2f7040;--green-soft:rgba(47,112,64,0.14);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"Avenir Next","SF Pro Text","Segoe UI",system-ui,sans-serif;color:var(--ink);
+  min-height:100vh;padding:20px;
+  background:
+    radial-gradient(1000px 640px at 6% -8%, rgba(64,190,220,0.28), transparent 60%),
+    radial-gradient(900px 680px at 98% 8%, rgba(255,166,120,0.24), transparent 62%),
+    radial-gradient(1000px 760px at 60% 112%, rgba(120,205,170,0.26), transparent 60%),
+    linear-gradient(180deg,#f7fbfd,#eef4f6);
+  background-attachment:fixed;
+}
+svg.i{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;display:block}
+.shell{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:210px 1fr;gap:18px}
+/* sidebar */
+.side{
+  background:var(--glass);backdrop-filter:blur(24px) saturate(1.5);-webkit-backdrop-filter:blur(24px) saturate(1.5);
+  border:1px solid var(--glass-line);border-radius:22px;padding:18px 14px;height:fit-content;position:sticky;top:20px;
+  box-shadow:0 1px 1px rgba(255,255,255,0.9) inset,0 12px 34px rgba(24,34,48,0.08);
+}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 16px;border-bottom:1px solid rgba(24,34,48,0.08);margin-bottom:12px}
+.brand .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#12938d,#0b6d68);display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;box-shadow:0 4px 12px rgba(14,125,120,0.3)}
+.brand b{font-size:14px;font-weight:600;line-height:1.1}
+.brand span{font-size:10.5px;color:var(--ink-3)}
+.nav{display:flex;flex-direction:column;gap:3px}
+.nav button{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:11px;border:none;background:none;font-family:inherit;font-size:13px;font-weight:500;color:var(--ink-2);cursor:pointer;text-align:left;width:100%}
+.nav button .ic{font-size:16px;display:flex}
+.nav button.on{background:var(--glass-strong);color:var(--teal);font-weight:600;box-shadow:0 1px 1px rgba(255,255,255,0.85) inset,0 2px 8px rgba(24,34,48,0.05)}
+.nav .who{margin-top:16px;padding:10px 12px;border-top:1px solid rgba(24,34,48,0.08);display:flex;align-items:center;gap:10px;font-size:12px;color:var(--ink-2)}
+.nav .who .av{width:28px;height:28px;border-radius:50%;background:var(--amber-soft);color:var(--amber);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+/* main */
+.main{min-width:0}
+.view{display:none;animation:fade .3s ease}
+.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.head h1{font-size:21px;font-weight:600;letter-spacing:-0.01em}
+.head p{font-size:12.5px;color:var(--ink-2);margin-top:3px}
+.gcard{background:var(--glass-strong);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--glass-line);border-radius:18px;box-shadow:0 1px 1px rgba(255,255,255,0.85) inset,0 4px 16px rgba(24,34,48,0.05)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+.kpi{padding:16px}
+.kpi .lab{font-size:11px;color:var(--ink-2);font-weight:600;display:flex;align-items:center;gap:6px}
+.kpi .val{font-size:30px;font-weight:600;letter-spacing:-0.02em;margin-top:8px}
+.kpi .sub{font-size:11px;color:var(--ink-3);margin-top:2px}
+.kpi.hero{background:linear-gradient(135deg,rgba(14,125,120,0.16),rgba(64,190,220,0.14))}
+.kpi.hero .val{color:var(--teal)}
+.panel{padding:18px;margin-bottom:14px}
+.panel h2{font-size:14px;font-weight:600;margin-bottom:4px}
+.panel .psub{font-size:12px;color:var(--ink-2);margin-bottom:14px}
+.attn{display:flex;align-items:center;gap:11px;padding:12px 14px;border-radius:12px;background:var(--amber-soft);margin-bottom:8px;font-size:12.5px;color:var(--amber);font-weight:500}
+.attn .ic{flex-shrink:0}
+.pill{display:inline-flex;align-items:center;justify-content:center;gap:5px;font-size:10.5px;line-height:1.4;padding:4px 11px;border-radius:999px;white-space:nowrap;font-weight:600;border:1px solid rgba(255,255,255,0.7)}
+.pill.warn{background:var(--amber-soft);color:var(--amber)}
+.pill.info{background:var(--teal-soft);color:var(--teal)}
+.pill.ok{background:var(--green-soft);color:var(--green)}
+.pill.mute{background:rgba(255,255,255,0.6);color:var(--ink-2)}
+.pill.new{background:var(--coral-soft);color:var(--coral)}
+/* table */
+.thead,.trow{display:grid;grid-template-columns:2.2fr 1.4fr 0.8fr 0.8fr 1.1fr;gap:12px;align-items:center}
+.thead{font-size:10.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.05em;font-weight:700;padding:0 14px 8px}
+.trow{padding:12px 14px;border-top:1px solid rgba(24,34,48,0.07);font-size:12.5px;cursor:pointer;border-radius:10px}
+.trow:hover{background:rgba(255,255,255,0.5)}
+.trow b{font-weight:600}
+.trow.sla{background:var(--amber-soft);border-left:3px solid var(--amber)}
+.trow.sla b,.trow.sla span{color:var(--amber)}
+.tcol-r{text-align:right}
+/* detail */
+.det{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}
+.photo{height:96px;background:rgba(255,255,255,0.5);border:1px solid var(--glass-line);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--ink-3);font-size:20px}
+.field p.l{font-size:10px;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.05em;font-weight:700}
+.field p.v{font-size:12.5px;margin-top:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 15px;border-radius:12px;border:1px solid var(--glass-line);background:var(--glass-strong);font-size:12.5px;font-weight:600;font-family:inherit;color:var(--ink);cursor:pointer;box-shadow:0 1px 1px rgba(255,255,255,0.9) inset}
+.btn:active{transform:translateY(1px)}
+.btn .bic{font-size:14px;display:flex}
+.btn.primary{background:linear-gradient(135deg,#12938d,#0b6d68);border-color:rgba(255,255,255,0.4);color:#fff;box-shadow:0 1px 1px rgba(255,255,255,0.35) inset,0 6px 16px rgba(14,125,120,0.3)}
+.btn.ghost{background:rgba(255,255,255,0.4);color:var(--ink-2)}
+.btn.full{width:100%}
+.tl{font-size:11.5px;color:var(--ink-2);display:flex;flex-direction:column;gap:8px}
+.tl .e{display:flex;gap:10px}
+.tl .e .t{color:var(--ink-3);min-width:56px;flex-shrink:0}
+.sel{width:100%;padding:9px 11px;border-radius:10px;border:1px solid var(--glass-line);background:rgba(255,255,255,0.7);font-family:inherit;font-size:12.5px;color:var(--ink)}
+.back{display:inline-flex;align-items:center;gap:6px;border:none;background:none;font-family:inherit;font-size:12.5px;font-weight:600;color:var(--teal);cursor:pointer;margin-bottom:10px}
+.aiassess{border:1px solid var(--glass-line);border-radius:12px;padding:12px;background:rgba(255,255,255,0.5)}
+/* provisioning */
+.tmpl{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.tcard{padding:14px;cursor:pointer;border:1px solid var(--glass-line)}
+.tcard.sel{border:2px solid var(--teal);background:var(--teal-soft)}
+.tcard b{font-size:13px;font-weight:600}
+.tcard span{font-size:11px;color:var(--ink-2);display:block;margin-top:3px}
+.frow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.inp{width:100%;padding:9px 11px;border-radius:10px;border:1px solid var(--glass-line);background:rgba(255,255,255,0.7);font-family:inherit;font-size:12.5px;color:var(--ink)}
+.inp::placeholder{color:var(--ink-3)}
+.lbl{font-size:10px;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.05em;font-weight:700;margin-bottom:5px;display:block}
+.drop{border:1.5px dashed rgba(24,34,48,0.25);border-radius:14px;padding:22px;text-align:center;color:var(--ink-2);cursor:pointer;background:rgba(255,255,255,0.4)}
+.drop .ic{font-size:26px;display:flex;justify-content:center;margin-bottom:8px}
+.fitem{display:flex;align-items:center;gap:11px;padding:9px 12px;border:1px solid var(--glass-line);border-radius:10px;margin-bottom:7px;font-size:12px;background:rgba(255,255,255,0.55)}
+.fitem .st{flex-shrink:0;width:18px;display:flex;justify-content:center}
+.fitem .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fitem .meta{font-size:10.5px;color:var(--ink-3);white-space:nowrap}
+.fitem.warn{background:var(--amber-soft);border-color:rgba(154,100,19,0.3)}
+.fitem.warn .nm,.fitem.warn .meta{color:var(--amber)}
+.completeness{display:flex;align-items:center;gap:12px;margin:14px 0}
+.bar{flex:1;height:8px;border-radius:5px;background:rgba(24,34,48,0.1);overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#12938d,#0b6d68);border-radius:5px;transition:width .5s}
+.spin{width:13px;height:13px;border:2px solid var(--teal-soft);border-top-color:var(--teal);border-radius:50%}
+@media (prefers-reduced-motion:no-preference){.spin{animation:rot .8s linear infinite}@keyframes rot{to{transform:rotate(360deg)}}}
+.steps{display:flex;gap:8px;margin-bottom:16px}
+.stepdot{flex:1;text-align:center;font-size:11px;color:var(--ink-3);font-weight:600;padding-bottom:8px;border-bottom:2px solid rgba(24,34,48,0.1)}
+.stepdot.on{color:var(--teal);border-color:var(--teal)}
+@media(max-width:900px){.shell{grid-template-columns:1fr}.side{position:static}.kpis{grid-template-columns:repeat(2,1fr)}.det{grid-template-columns:1fr}.tmpl,.frow{grid-template-columns:1fr}.thead,.trow{grid-template-columns:2fr 1fr 1fr}.thead span:nth-child(3),.trow span:nth-child(3),.thead span:nth-child(4),.trow span:nth-child(4){display:none}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 20z"/><path d="M9 21.5V13h6v8.5"/></symbol>
+<symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></symbol>
+<symbol id="i-library" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+<symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L3 14h8l-1 8 10-12h-8z"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+</defs></svg>
+
+<div class="shell">
+  <aside class="side">
+    <div class="brand">
+      <div class="logo"><svg class="i"><use href="#i-home"/></svg></div>
+      <div><b>Homer</b><span>Sunrise Developments</span></div>
+    </div>
+    <nav class="nav" id="nav">
+      <button class="on" data-v="dash"><span class="ic"><svg class="i"><use href="#i-grid"/></svg></span>Dashboard</button>
+      <button data-v="props"><span class="ic"><svg class="i"><use href="#i-home"/></svg></span>Properties</button>
+      <button data-v="defects"><span class="ic"><svg class="i"><use href="#i-tool"/></svg></span>Defects</button>
+      <button data-v="library"><span class="ic"><svg class="i"><use href="#i-library"/></svg></span>Library</button>
+      <button data-v="settings"><span class="ic"><svg class="i"><use href="#i-settings"/></svg></span>Settings</button>
+      <div class="who"><span class="av">B</span><div><b style="font-weight:600">Bec Turner</b><br><span style="font-size:10.5px;color:var(--ink-3)">Client care · admin</span></div></div>
+    </nav>
+  </aside>
+
+  <main class="main" id="main"></main>
+</div>
+
+<script>
+const ic=n=>`<svg class="i"><use href="#i-${n}"/></svg>`;
+const M=document.getElementById('main');
+
+const defects=[
+  {id:0,t:'Render crack, garage wall',prop:'9 Coral Ct',owner:'James Fowler',sev:'3 / 5',age:'6 days',status:'sla',pill:'<span class="pill warn">Over SLA</span>',warranty:'12-month defect period',assess:'Diagonal crack through render above the garage lintel, ~40cm. Pattern suggests lintel movement rather than surface shrinkage. Flagged for builder assessment, not deflected. Recommend on-site inspection.',notes:'"Noticed it after the storms last week, seems to have grown a bit."',owned:'reported 6 days ago'},
+  {id:1,t:'Sticking window, bed 2',prop:'Unit 7, 40 Reef St',owner:'Priya Nair',sev:'2 / 5',age:'4 hrs',status:'',pill:'<span class="pill new">New</span>',warranty:'12-month defect period',assess:'Window binds in the frame at the latch side. Consistent with timber/frame movement during settling. Defect candidate, carpentry. Low severity.',notes:'"Hard to open since it got cold. Not urgent."',owned:'reported 4 hours ago'},
+  {id:2,t:'Balcony door drainage',prop:'Unit 12, 40 Reef St',owner:'Hannah Reeves',sev:'2 / 5',age:'1 day',status:'',pill:'<span class="pill info">Assigned</span>',warranty:'12-month defect period',assess:'Water pooling at the balcony threshold after rain, not draining to the weep holes. Possible waterproofing/fall issue. Defect candidate, waterproofing.',notes:'"Puddles inside the door after heavy rain."',owned:'reported 1 day ago'},
+  {id:3,t:'Ensuite grout cracking',prop:'Unit 12, 40 Reef St',owner:'Hannah Reeves',sev:'1 / 5',age:'9 days',status:'',pill:'<span class="pill ok">Rectified</span>',warranty:'12-month defect period',assess:'Hairline grout cracking along the shower base junction. Cosmetic, common early settling. Deflected to homeowner with guidance; homeowner chose to report.',notes:'"Small cracks in the grout, probably nothing."',owned:'reported 9 days ago'}
+];
+
+const views={};
+
+views.dash=()=>`
+  <div class="head"><div><h1>Dashboard</h1><p>Reef House + Banksia Lane estate · 128 homes live</p></div>
+    <button class="btn" onclick="go('props')"><span class="bic">${ic('plus')}</span>New home</button></div>
+  <div class="kpis">
+    <div class="kpi gcard"><div class="lab">${ic('home')} Homes live</div><div class="val">128</div><div class="sub">+12 this month</div></div>
+    <div class="kpi gcard"><div class="lab">${ic('check')} Active owners</div><div class="val">71%</div><div class="sub">of handed-over homes</div></div>
+    <div class="kpi gcard"><div class="lab">${ic('tool')} Open defects</div><div class="val">14</div><div class="sub">3 over SLA</div></div>
+    <div class="kpi gcard hero"><div class="lab">${ic('bolt')} AI deflection</div><div class="val">34%</div><div class="sub">issues resolved without you</div></div>
+  </div>
+  <div class="panel gcard">
+    <h2>Needs attention</h2>
+    <p class="psub">Sorted so the risky items surface first</p>
+    <div class="attn" onclick="openDefect(0)" style="cursor:pointer">${ic('alert')} Render crack at 9 Coral Ct has been awaiting assessment for 6 days (over your 5-day SLA)</div>
+    <div class="attn" style="cursor:pointer">${ic('clock')} 2 handovers loaded but not yet accepted by the owner: 18 Banksia Lane, Unit 9 Reef St</div>
+  </div>
+  <div class="panel gcard">
+    <h2>This month across the portfolio</h2>
+    <p class="psub">The numbers you'd otherwise chase across spreadsheets</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;font-size:12.5px">
+      <div><p style="font-size:24px;font-weight:600">47</p><p style="color:var(--ink-2)">issues raised by homeowners</p></div>
+      <div><p style="font-size:24px;font-weight:600;color:var(--teal)">16</p><p style="color:var(--ink-2)">deflected by AI before reaching you</p></div>
+      <div><p style="font-size:24px;font-weight:600">2.4 days</p><p style="color:var(--ink-2)">median time to assess a defect</p></div>
+    </div>
+  </div>`;
+
+views.defects=()=>`
+  <div class="head"><div><h1>Defects</h1><p>14 open · sorted needs-attention first</p></div>
+    <div style="display:flex;gap:8px">
+      <select class="sel" style="width:auto"><option>All statuses</option><option>New</option><option>Assessing</option><option>Assigned</option></select>
+      <select class="sel" style="width:auto"><option>All properties</option><option>Reef House</option><option>Banksia Lane</option></select>
+    </div></div>
+  <div class="panel gcard" style="padding:10px 4px">
+    <div class="thead"><span>Defect</span><span>Property</span><span>Severity</span><span>Age</span><span class="tcol-r">Status</span></div>
+    ${defects.map(d=>`<div class="trow ${d.status}" onclick="openDefect(${d.id})">
+      <span><b>${d.t}</b></span><span>${d.prop}</span><span>${d.sev}</span><span>${d.age}</span><span class="tcol-r">${d.pill}</span>
+    </div>`).join('')}
+  </div>
+  <p style="font-size:11.5px;color:var(--ink-2);padding:0 6px">Every row opens the photos, the AI assessment as shown to the owner, warranty status, and a one-click decision. Try the render crack.</p>`;
+
+function openDefect(i){
+  const d=defects[i];
+  M.querySelector('.view').innerHTML=`
+    <button class="back" onclick="go('defects')">${ic('back')} Defects</button>
+    <div class="head" style="align-items:flex-start"><div><h1 style="font-size:18px">${d.t}</h1>
+      <p>${d.prop} · ${d.owner} · ${d.owned}</p></div>
+      <div style="display:flex;gap:6px"><span class="pill info">${d.warranty}</span><span class="pill mute">Severity ${d.sev}</span></div></div>
+    <div class="det">
+      <div>
+        <div style="display:flex;gap:10px;margin-bottom:12px"><div class="photo" style="flex:1">${ic('search')}</div><div class="photo" style="flex:1">${ic('search')}</div></div>
+        <div class="aiassess" style="margin-bottom:12px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;color:var(--teal)">${ic('bolt')}<b style="font-size:12.5px;color:var(--ink)">AI assessment, as shown to the owner</b></div>
+          <p style="font-size:12.5px;color:var(--ink-2);line-height:1.6">${d.assess}</p>
+        </div>
+        <div class="aiassess">
+          <b style="font-size:12px">Owner's notes</b>
+          <p style="font-size:12.5px;color:var(--ink-2);line-height:1.6;margin-top:5px">${d.notes}</p>
+        </div>
+      </div>
+      <div>
+        <div class="gcard" style="padding:14px;margin-bottom:12px">
+          <b style="font-size:12.5px;display:block;margin-bottom:10px">Decision</b>
+          <button class="btn primary full" style="margin-bottom:7px" onclick="decide(this,'Accepted. Work order sent, owner notified.')">Accept and assign</button>
+          <button class="btn full" style="margin-bottom:7px" onclick="decide(this,'Set to monitoring. Owner notified.')">Monitor</button>
+          <button class="btn ghost full" onclick="decide(this,'Declined with reason. Owner notified.')">Decline with reason</button>
+          <div style="border-top:1px solid rgba(24,34,48,0.08);margin-top:12px;padding-top:11px">
+            <span class="lbl">Assign to</span>
+            <select class="sel" style="margin-bottom:9px"><option>Coastline Carpentry</option><option>Reef Plumbing</option><option>Apex Waterproofing</option><option>Amp Electrical</option></select>
+            <span class="lbl">Target date</span>
+            <input class="inp" value="Fri 24 Jul">
+          </div>
+        </div>
+        <div class="gcard" style="padding:14px">
+          <b style="font-size:12.5px;display:block;margin-bottom:10px">Timeline</b>
+          <div class="tl">
+            <div class="e"><span class="t">4:12pm</span><span>Reported by owner, 2 photos</span></div>
+            <div class="e"><span class="t">4:12pm</span><span>AI classified and assessed</span></div>
+            <div class="e"><span class="t">4:13pm</span><span>Notification sent to Sunrise</span></div>
+          </div>
+          <p style="font-size:10.5px;color:var(--ink-3);margin-top:10px">Append-only. Exportable as the evidence ledger.</p>
+        </div>
+      </div>
+    </div>`;
+}
+function decide(btn,msg){
+  const box=btn.closest('.gcard');
+  box.innerHTML=`<div style="text-align:center;padding:14px 4px"><div style="color:var(--green);font-size:26px;display:flex;justify-content:center;margin-bottom:8px">${ic('check')}</div><b style="font-size:13px">${msg}</b><p style="font-size:11.5px;color:var(--ink-2);margin-top:6px">The homeowner's Issues tab updated instantly. Logged to the ledger.</p></div>`;
+}
+
+let pStep=1,pTemplate=true;
+views.props=()=>`
+  <div class="head"><div><h1>New home</h1><p>Provision a property · target 15 minutes</p></div></div>
+  <div class="steps">
+    <div class="stepdot ${pStep>=1?'on':''}">1 · Template</div>
+    <div class="stepdot ${pStep>=2?'on':''}">2 · Documents</div>
+    <div class="stepdot ${pStep>=3?'on':''}">3 · Review</div>
+  </div>
+  <div id="pbody"></div>`;
+
+function pRender(){
+  const b=document.getElementById('pbody');if(!b)return;
+  if(pStep===1)b.innerHTML=`
+    <div class="panel gcard">
+      <h2>Start from a template</h2><p class="psub">Only the differences need entering</p>
+      <div class="tmpl">
+        <div class="tcard gcard sel"><b>Coolum 240</b><span>14 appliances · 3 doc packs · used by 41 homes</span></div>
+        <div class="tcard gcard"><b>Noosa 190</b><span>11 appliances · 3 doc packs · used by 27 homes</span></div>
+        <div class="tcard gcard"><b>Blank home</b><span>Start from nothing</span></div>
+      </div>
+      <div class="frow">
+        <div><span class="lbl">Address</span><input class="inp" value="16 Banksia Lane, Peregian Springs"></div>
+        <div><span class="lbl">Handover date</span><input class="inp" value="14 Aug 2026"></div>
+        <div><span class="lbl">Owner email</span><input class="inp" placeholder="owner@email.com"></div>
+      </div>
+      <p style="font-size:11.5px;color:var(--ink-2)">Defect and structural period dates calculate automatically from handover.</p>
+      <div style="text-align:right;margin-top:14px"><button class="btn primary" onclick="pStep=2;pRender();document.querySelectorAll('.stepdot')[1].classList.add('on')">Continue to documents</button></div>
+    </div>`;
+  if(pStep===2)b.innerHTML=`
+    <div class="panel gcard">
+      <h2>Add this home's documents</h2><p class="psub">Drag folders in. Folder names become tags, the AI reads each file as it lands</p>
+      <div class="drop" onclick="pIngest()">${ic('upload')}<div style="font-size:12.5px">Drop folders or files here</div><div style="font-size:11px;color:var(--ink-3);margin-top:4px">16 Banksia &gt; Kitchen &gt; Appliances becomes tags automatically</div></div>
+      <div id="filelist" style="margin-top:14px"></div>
+      <div style="text-align:right;margin-top:6px"><button class="btn primary" id="toReview" style="display:none" onclick="pStep=3;pRender();document.querySelectorAll('.stepdot')[2].classList.add('on')">Continue to review</button></div>
+    </div>`;
+  if(pStep===3)b.innerHTML=`
+    <div class="panel gcard">
+      <div style="display:flex;justify-content:space-between;align-items:center"><h2>Review what I found</h2><span class="pill warn">2 fields need a look</span></div>
+      <p class="psub">Confident fields are pre-approved. Flagged ones need your eyes</p>
+      <div class="thead" style="grid-template-columns:1.6fr 1.6fr 1.1fr 0.9fr">${['Item','Model / detail','Warranty ends','Source'].map(h=>`<span>${h}</span>`).join('')}</div>
+      ${[['Dishwasher','Bosch SMS6HCI01A','Aug 2028','manual.pdf',0],
+         ['Hot water system','Rheem 491, serial 88213','Aug 2031','warranty.pdf',0],
+         ['Oven','Westinghouse WVE6516 (low confidence)','Aug 2028?','receipt',1],
+         ['Bin day','Thursday (council lookup)','Confirm rotation','postcode',1]].map(r=>`
+        <div class="trow ${r[4]?'sla':''}" style="grid-template-columns:1.6fr 1.6fr 1.1fr 0.9fr;cursor:default">
+          <span><b>${r[0]}</b></span><span>${r[1]}</span><span>${r[2]}</span><span style="color:var(--teal)">${r[3]}</span></div>`).join('')}
+      <div class="completeness"><span style="font-size:11.5px;font-weight:600">Handover pack: 9 of 11 required items</span><div class="bar"><i style="width:82%"></i></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;flex-wrap:wrap;gap:10px">
+        <p style="font-size:11px;color:var(--ink-2);max-width:60%">On handover: the doc set locks as the archive copy, the owner invite sends, and the welcome tour + home map generate.</p>
+        <div style="display:flex;gap:8px"><button class="btn ghost" onclick="go('dash')">Save draft</button><button class="btn primary" onclick="pDone(this)">Approve and hand over</button></div>
+      </div>
+    </div>`;
+}
+function pIngest(){
+  const fl=document.getElementById('filelist');
+  const files=[['Bosch dishwasher manual.pdf','Model + 2yr warranty found',0],['Hot water warranty.pdf','Serial + 5yr warranty found',0],['Electrical plan rev C.pdf','Reading…',2],['IMG_4402.pdf',"Couldn't identify, tag manually",1]];
+  fl.innerHTML='';
+  files.forEach((f,i)=>{
+    const el=document.createElement('div');el.className='fitem'+(f[2]===1?' warn':'');
+    el.innerHTML=`<span class="st"><span class="spin"></span></span><span class="nm">${f[0]}</span><span class="meta">scanning…</span>`;
+    fl.appendChild(el);
+    setTimeout(()=>{
+      const done=f[2]===1?`<svg class="i" style="width:14px;color:var(--amber)"><use href="#i-alert"/></svg>`:`<svg class="i" style="width:14px;color:var(--green)"><use href="#i-check"/></svg>`;
+      el.querySelector('.st').innerHTML=done;el.querySelector('.meta').textContent=f[1];
+      if(i===files.length-1)document.getElementById('toReview').style.display='inline-flex';
+    }, i*700+800);
+  });
+}
+function pDone(btn){
+  const p=btn.closest('.panel');
+  p.innerHTML=`<div style="text-align:center;padding:26px 10px"><div style="color:var(--green);font-size:32px;display:flex;justify-content:center;margin-bottom:10px">${ic('check')}</div>
+    <h2>16 Banksia Lane is live</h2>
+    <p class="psub" style="margin-top:6px">Archive copy locked · owner invite sent to their email · welcome tour and home map generated</p>
+    <button class="btn primary" style="margin-top:8px" onclick="pStep=1;go('props')">Provision another</button></div>`;
+}
+
+views.library=()=>`
+  <div class="head"><div><h1>Shared library</h1><p>Products and docs reused across your portfolio</p></div></div>
+  <div class="panel gcard">
+    <h2>Why this saves you money</h2>
+    <p class="psub">A manual loaded once is inherited by every home that uses it, and its defect rate rolls up across the portfolio</p>
+    ${[['Bosch SMS6HCI01A dishwasher','In 43 homes','Low defect rate'],['Rheem 491 hot water','In 61 homes','Above-average defect rate'],['Coolum 240 template','41 homes','14 appliances, 3 doc packs']].map(r=>`
+      <div class="trow" style="grid-template-columns:2fr 1fr 1.2fr;cursor:default"><span><b>${r[0]}</b></span><span>${r[1]}</span><span style="color:var(--ink-2)">${r[2]}</span></div>`).join('')}
+    <p style="font-size:11.5px;color:var(--ink-2);padding:12px 6px 0">The Rheem flag is the kind of insight no competitor offers: your own portfolio telling you which products generate rework.</p>
+  </div>`;
+
+views.settings=()=>`
+  <div class="head"><div><h1>Settings</h1><p>Branding, trades, notifications, AI</p></div></div>
+  <div class="panel gcard"><h2>Branding</h2><p class="psub">Your logo, colours, and hero image on the homeowner app</p>
+    <div style="display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:10px;background:var(--amber-soft);display:flex;align-items:center;justify-content:center;color:var(--amber)">${ic('home')}</div><span style="font-size:12.5px">Sunrise Developments · charcoal + gold</span></div>
+  </div>
+  <div class="panel gcard"><h2>AI usage this month</h2><p class="psub">Pooled across your 128 homes</p>
+    <div class="completeness"><span style="font-size:11.5px;font-weight:600">6,240 of 19,200 messages</span><div class="bar"><i style="width:33%"></i></div></div>
+    <p style="font-size:11.5px;color:var(--ink-2)">Well within your plan. Bring your own AI key on the enterprise tier to remove pooled limits entirely.</p>
+  </div>
+  <div class="panel gcard"><h2>Trades directory</h2><p class="psub">Assign these to defects and pre-load them for homeowners</p>
+    ${['Coastline Carpentry','Reef Plumbing','Apex Waterproofing','Amp Electrical'].map(t=>`<div class="trow" style="grid-template-columns:1fr auto;cursor:default"><span><b>${t}</b></span><span class="pill mute">active</span></div>`).join('')}
+  </div>`;
+
+function go(v){
+  M.innerHTML='<div class="view on"></div>';
+  M.querySelector('.view').innerHTML=views[v]();
+  document.querySelectorAll('#nav button[data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  if(v==='props'){pStep=1;pRender()}
+}
+document.getElementById('nav').addEventListener('click',e=>{const b=e.target.closest('button[data-v]');if(b)go(b.dataset.v)});
+go('dash');
+</script>
+</body>
+</html>

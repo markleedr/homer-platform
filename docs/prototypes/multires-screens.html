@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home AI · Liquid glass · Unit 12, Reef House</title>
+<style>
+:root{
+  --ink:#182230;
+  --ink-2:rgba(24,34,48,0.62);
+  --ink-3:rgba(24,34,48,0.4);
+  --glass:rgba(255,255,255,0.58);
+  --glass-strong:rgba(255,255,255,0.78);
+  --glass-line:rgba(255,255,255,0.85);
+  --teal:#0e7d78;
+  --teal-soft:rgba(14,125,120,0.13);
+  --coral:#c04a32;
+  --coral-soft:rgba(192,74,50,0.13);
+  --amber:#9a6413;
+  --amber-soft:rgba(154,100,19,0.15);
+  --green:#2f7040;
+  --green-soft:rgba(47,112,64,0.14);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"Avenir Next","SF Pro Text","Segoe UI",system-ui,sans-serif;
+  color:var(--ink);
+  min-height:100vh;
+  padding:40px 24px 60px;
+  background:
+    radial-gradient(900px 600px at 8% -5%, rgba(64,190,220,0.32), transparent 60%),
+    radial-gradient(800px 640px at 96% 12%, rgba(255,166,120,0.30), transparent 62%),
+    radial-gradient(900px 700px at 50% 108%, rgba(120,205,170,0.32), transparent 60%),
+    radial-gradient(600px 500px at 78% 78%, rgba(190,160,255,0.20), transparent 65%),
+    linear-gradient(180deg,#f7fbfd,#eef4f6);
+  background-attachment:fixed;
+}
+svg.i{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;display:block}
+header.page{max-width:1400px;margin:0 auto 30px}
+.crumb{display:inline-flex;align-items:center;gap:10px;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);font-weight:600;margin-bottom:12px;background:var(--glass);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);border:1px solid var(--glass-line);border-radius:999px;padding:7px 16px;box-shadow:0 2px 12px rgba(24,34,48,0.06)}
+header.page h1{font-size:24px;font-weight:600;letter-spacing:-0.02em}
+header.page p{font-size:13.5px;color:var(--ink-2);margin-top:6px}
+.grid{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px}
+.slot>.label{font-size:12px;color:var(--ink-2);text-align:center;font-weight:600;margin-bottom:10px;letter-spacing:0.02em}
+.phone{
+  position:relative;border-radius:30px;padding:18px 15px 15px;min-height:460px;
+  display:flex;flex-direction:column;
+  background:var(--glass);
+  backdrop-filter:blur(28px) saturate(1.6);-webkit-backdrop-filter:blur(28px) saturate(1.6);
+  border:1px solid var(--glass-line);
+  box-shadow:0 1px 1px rgba(255,255,255,0.9) inset,0 12px 34px rgba(24,34,48,0.10),0 2px 8px rgba(24,34,48,0.05);
+  overflow:hidden;
+}
+.phone::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(420px 240px at 85% -8%, rgba(255,255,255,0.55), transparent 60%)}
+.phone>*{position:relative}
+.wash{position:absolute;inset:0;pointer-events:none;opacity:0.55}
+.wash.cool{background:radial-gradient(300px 220px at 10% 100%, rgba(64,190,220,0.28), transparent 65%)}
+.wash.warm{background:radial-gradient(300px 220px at 90% 100%, rgba(255,166,120,0.30), transparent 65%)}
+.wash.green{background:radial-gradient(300px 220px at 50% 108%, rgba(120,205,170,0.30), transparent 65%)}
+.gcard{background:var(--glass-strong);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--glass-line);border-radius:16px;box-shadow:0 1px 1px rgba(255,255,255,0.85) inset,0 3px 14px rgba(24,34,48,0.05)}
+.row{display:flex;align-items:center;gap:10px}
+.pill{display:inline-flex;align-items:center;justify-content:center;gap:5px;font-size:11px;line-height:1.4;padding:5px 12px;border-radius:999px;white-space:nowrap;font-weight:600;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.7)}
+.pill.warn{background:var(--amber-soft);color:var(--amber)}
+.pill.info{background:var(--teal-soft);color:var(--teal)}
+.pill.ok{background:var(--green-soft);color:var(--green)}
+.pill.mute{background:rgba(255,255,255,0.6);color:var(--ink-2)}
+.card-line{display:flex;align-items:center;gap:11px;padding:12px 13px}
+.card-line .ic{flex-shrink:0;width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;background:rgba(255,255,255,0.7);border:1px solid var(--glass-line);color:var(--ink-2)}
+.card-line .tx{flex:1;min-width:0}
+.card-line .tx b{display:block;font-size:12.5px;font-weight:600}
+.card-line .tx span{display:block;font-size:11px;color:var(--ink-2);margin-top:2px}
+.card-line.danger{background:linear-gradient(135deg,rgba(192,74,50,0.14),rgba(255,166,120,0.16))}
+.card-line.danger .tx b,.card-line.danger .tx span{color:var(--coral)}
+.card-line.danger .ic{background:rgba(255,255,255,0.75);color:var(--coral)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 15px;border-radius:14px;border:1px solid var(--glass-line);background:var(--glass-strong);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font-size:12.5px;font-weight:600;font-family:inherit;color:var(--ink);cursor:pointer;box-shadow:0 1px 1px rgba(255,255,255,0.9) inset,0 3px 10px rgba(24,34,48,0.06)}
+.btn .bic{flex-shrink:0;width:18px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.btn.primary{background:linear-gradient(135deg,#12938d,#0b6d68);border-color:rgba(255,255,255,0.4);color:#fff;box-shadow:0 1px 1px rgba(255,255,255,0.35) inset,0 6px 18px rgba(14,125,120,0.35)}
+.btn:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.hint{font-size:10.5px;color:var(--ink-3);text-align:center;margin-top:8px}
+.stack{display:flex;flex-direction:column;gap:9px}
+.welcome-orb{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--teal);margin:16px auto 12px;background:linear-gradient(135deg,rgba(64,190,220,0.35),rgba(120,205,170,0.35));border:1px solid var(--glass-line);box-shadow:0 1px 1px rgba(255,255,255,0.9) inset,0 8px 22px rgba(14,125,120,0.22)}
+.chapter{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;font-size:12px;color:var(--ink-2);background:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.75)}
+.chapter.danger{background:var(--coral-soft);color:var(--coral);font-weight:600;border-color:rgba(255,255,255,0.6)}
+.chapter .ic{flex-shrink:0;width:18px;font-size:14px;display:flex;align-items:center;justify-content:center}
+.bubble{font-size:12px;line-height:1.55;padding:10px 13px;max-width:88%;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.bubble.me{background:linear-gradient(135deg,rgba(14,125,120,0.16),rgba(64,190,220,0.18));color:#0a5f5b;border:1px solid rgba(255,255,255,0.7);border-radius:15px 15px 4px 15px;margin-left:auto;max-width:80%;font-weight:500}
+.bubble.home{background:rgba(255,255,255,0.72);color:var(--ink-2);border:1px solid var(--glass-line);border-radius:15px 15px 15px 4px}
+.input{display:flex;align-items:center;gap:9px;border:1px solid var(--glass-line);background:rgba(255,255,255,0.75);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:999px;padding:10px 16px;margin-top:12px;box-shadow:0 1px 1px rgba(255,255,255,0.9) inset,0 4px 12px rgba(24,34,48,0.06);color:var(--ink-3);font-size:14px}
+.input span{font-size:12px;color:var(--ink-3);flex:1}
+.nudges{display:flex;gap:7px;overflow:hidden;margin:0 0 13px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.tile{padding:12px 8px;text-align:center;color:var(--ink-2)}
+.tile .ic{font-size:17px;display:flex;justify-content:center}
+.tile p{font-size:11px;margin-top:6px;font-weight:600;color:var(--ink)}
+.tabbar{display:flex;justify-content:space-around;align-items:center;margin-top:auto;padding:10px 8px;border-radius:999px;background:rgba(255,255,255,0.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--glass-line);box-shadow:0 1px 1px rgba(255,255,255,0.9) inset,0 6px 18px rgba(24,34,48,0.08)}
+.tab{text-align:center;color:var(--ink-3);font-size:9.5px;font-weight:600}
+.tab .ic{font-size:17px;display:flex;justify-content:center;margin-bottom:3px}
+.tab.on{color:var(--teal)}
+.issue{padding:11px 13px}
+.issue .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.issue .top b{font-size:12.5px;font-weight:600;min-width:0}
+.issue span.sub{display:block;font-size:11px;color:var(--ink-2);margin-top:4px}
+.src{font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--teal);font-weight:700}
+.locktag{display:inline-flex;align-items:center;gap:3px;vertical-align:-1px}
+.locktag svg{width:10px;height:10px}
+footer.note{max-width:1400px;margin:30px auto 0;font-size:12.5px;color:var(--ink-2);line-height:1.7;background:var(--glass);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);border:1px solid var(--glass-line);border-radius:18px;padding:16px 20px;box-shadow:0 4px 18px rgba(24,34,48,0.06)}
+@media (prefers-reduced-motion:no-preference){
+  .phone{transition:transform .22s ease,box-shadow .22s ease}
+  .phone:hover{transform:translateY(-3px);box-shadow:0 1px 1px rgba(255,255,255,0.9) inset,0 20px 46px rgba(24,34,48,0.13),0 3px 10px rgba(24,34,48,0.06)}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+<symbol id="i-volume" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9.2 9.2 0 0 1 0 13"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v6"/><path d="M15 3v6"/><path d="M6 9h12v3a6 6 0 0 1-12 0z"/><path d="M12 18v3"/></symbol>
+<symbol id="i-building" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h.01M15 7h.01M9 11h.01M15 11h.01M9 15h.01M15 15h.01"/><path d="M10 21v-3h4v3"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.6-3.4 7.6-8 9-4.6-1.4-8-4.4-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8A8.5 8.5 0 0 1 12.5 3 8.5 8.5 0 0 1 21 11.5z"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5l13 7.5-13 7.5z"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></symbol>
+<symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="1.5" width="6" height="13" rx="3"/><path d="M19 10v1.5a7 7 0 0 1-14 0V10"/><path d="M12 18.5v4"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></symbol>
+<symbol id="i-recycle" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></symbol>
+<symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3c2.2 3.2 5 5.4 5 9a5 5 0 1 1-10 0c0-1.9.9-3.4 2.1-4.9.4 1.5 1.4 2.3 1.4 2.3C10.7 7.4 12 3 12 3z"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
+<symbol id="i-plan" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></symbol>
+<symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 1 9-9c0 2.2-1.6 3-3 3h-2a2 2 0 0 0-2 2c0 1 .6 1.4.6 2.4S13.4 21 12 21z"/><path d="M7.5 10.5h.01M12 7.5h.01M16.5 10.5h.01"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4"/><path d="M10.3 12.7L21 2"/><path d="M15 8l3 3"/><path d="M18 5l2 2"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+<symbol id="i-folder" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+<symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 20z"/><path d="M9 21.5V13h6v8.5"/></symbol>
+<symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></symbol>
+</defs>
+</svg>
+
+<header class="page">
+  <div class="crumb">Home AI · liquid glass · multi-res data set</div>
+  <h1>Unit 12, Reef House · 40 Reef St, Maroochydore</h1>
+  <p>Settled 2 Jun 2026 · provisioned by Sunrise Developments · building manager on site: Dana</p>
+</header>
+
+<div class="grid">
+
+  <!-- 1 · First run -->
+  <div class="slot">
+    <p class="label">First run · meet your apartment</p>
+    <div class="phone"><div class="wash cool"></div>
+      <div class="welcome-orb"><svg class="i"><use href="#i-volume"/></svg></div>
+      <p style="font-size:15px;font-weight:600;text-align:center;letter-spacing:-0.01em">Welcome to Unit 12, Reef House</p>
+      <p style="font-size:12px;color:var(--ink-2);text-align:center;line-height:1.5;margin:5px 0 14px">Your apartment would like to introduce itself. About 4 minutes.</p>
+      <div class="stack">
+        <div class="chapter danger"><span class="ic"><svg class="i"><use href="#i-alert"/></svg></span>Shut-offs and fire exits</div>
+        <div class="chapter"><span class="ic"><svg class="i"><use href="#i-plug"/></svg></span>Your appliances</div>
+        <div class="chapter"><span class="ic"><svg class="i"><use href="#i-building"/></svg></span>Your building: waste, parking, pool</div>
+        <div class="chapter"><span class="ic"><svg class="i"><use href="#i-shield"/></svg></span>Warranties at a glance</div>
+        <div class="chapter"><span class="ic"><svg class="i"><use href="#i-chat"/></svg></span>Just ask me anything</div>
+      </div>
+      <div style="margin-top:auto;display:flex;gap:9px;padding-top:14px">
+        <button class="btn primary" style="flex:1"><span class="bic"><svg class="i"><use href="#i-play"/></svg></span>Play</button>
+        <button class="btn">Skip</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 · Chat -->
+  <div class="slot">
+    <p class="label">Chat · knows the unit and the building</p>
+    <div class="phone"><div class="wash green"></div>
+      <div class="row" style="justify-content:space-between;margin-bottom:11px">
+        <span style="font-size:13px;font-weight:600">Unit 12, Reef House</span>
+        <span class="pill mute"><svg class="i" style="width:13px;height:13px"><use href="#i-cloud"/></svg>21°</span>
+      </div>
+      <div class="nudges">
+        <span class="pill warn">Lift B out Tue 9 to 12</span>
+        <span class="pill mute">AC filter due</span>
+      </div>
+      <div class="bubble me">where do visitors park?</div>
+      <div class="bubble home" style="margin-top:9px">Visitor bays 1 to 6 are on basement level 1, just left of the roller door. Book through your guest code and they get 4 hours.</div>
+      <div class="bubble me" style="margin-top:9px">and the pool hours?</div>
+      <div class="bubble home" style="margin-top:9px">6am to 9pm daily. Your fob opens the pool gate. No glass past the gate, house rule 14.</div>
+      <div style="margin-top:auto">
+        <div class="input"><svg class="i"><use href="#i-camera"/></svg><span>Ask your apartment anything</span><svg class="i"><use href="#i-mic"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 · Dates -->
+  <div class="slot">
+    <p class="label">Dates · unit + building rhythms</p>
+    <div class="phone"><div class="wash warm"></div>
+      <div class="stack">
+        <div class="card-line gcard" style="background:linear-gradient(135deg,rgba(154,100,19,0.12),rgba(255,196,110,0.20))">
+          <span class="ic" style="color:var(--amber)"><svg class="i"><use href="#i-recycle"/></svg></span>
+          <div class="tx"><b>Recycling room, level B1</b><span>Collection Mondays · glass crate Thursdays</span></div>
+        </div>
+        <div class="card-line gcard">
+          <span class="ic" style="background:transparent;border:1.5px solid rgba(24,34,48,0.25);border-radius:8px;width:20px;height:20px;margin:0 5px"></span>
+          <div class="tx"><b>Clean AC return-air filter</b><span>Due Sunday · repeats quarterly</span></div>
+        </div>
+        <div class="card-line gcard">
+          <span class="ic" style="color:var(--teal)"><svg class="i"><use href="#i-shield"/></svg></span>
+          <div class="tx"><b>12-month defect period</b><span>Ends 2 Jun 2027 · 11 months left</span></div>
+        </div>
+        <div class="card-line gcard">
+          <span class="ic" style="color:var(--coral)"><svg class="i"><use href="#i-flame"/></svg></span>
+          <div class="tx"><b>Fire alarm test, whole building</b><span>Wed 22 Jul, 10am · <span class="src">from Dana</span></span></div>
+        </div>
+        <div class="card-line gcard">
+          <span class="ic"><svg class="i"><use href="#i-file"/></svg></span>
+          <div class="tx"><b>Contents insurance renewal</b><span>Due September · I'll check the market first</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 · House -->
+  <div class="slot">
+    <p class="label">House · unit first, building beneath</p>
+    <div class="phone"><div class="wash warm"></div>
+      <div class="stack">
+        <div class="card-line gcard danger">
+          <span class="ic"><svg class="i"><use href="#i-alert"/></svg></span>
+          <div class="tx"><b>Shut-offs and fire exits</b><span>Water valve: laundry cupboard · exit: stair B</span></div>
+        </div>
+        <div class="tiles">
+          <div class="tile gcard"><span class="ic"><svg class="i"><use href="#i-plan"/></svg></span><p>Unit plan</p></div>
+          <div class="tile gcard"><span class="ic"><svg class="i"><use href="#i-plug"/></svg></span><p>Appliances</p></div>
+          <div class="tile gcard"><span class="ic"><svg class="i"><use href="#i-palette"/></svg></span><p>Finishes</p></div>
+          <div class="tile gcard"><span class="ic"><svg class="i"><use href="#i-key"/></svg></span><p>Guest codes</p></div>
+        </div>
+        <div class="card-line gcard">
+          <span class="ic"><svg class="i"><use href="#i-building"/></svg></span>
+          <div class="tx"><b>Reef House building</b><span>Waste, pool, gym, visitor parking, NBN</span></div>
+        </div>
+        <div class="card-line gcard">
+          <span class="ic"><svg class="i"><use href="#i-user"/></svg></span>
+          <div class="tx"><b>Building manager · Dana</b><span>On site Mon to Fri, 7am to 3pm</span></div>
+          <span style="flex-shrink:0;color:var(--teal);font-size:15px"><svg class="i"><use href="#i-phone"/></svg></span>
+        </div>
+        <div class="card-line gcard">
+          <span class="ic"><svg class="i"><use href="#i-folder"/></svg></span>
+          <div class="tx"><b>My documents</b><span>Yours to add and edit · builder set locked <span class="locktag"><svg class="i"><use href="#i-lock"/></svg></span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 · Issues -->
+  <div class="slot">
+    <p class="label">Issues · unit or common area</p>
+    <div class="phone"><div class="wash cool"></div>
+      <button class="btn primary" style="width:100%"><span class="bic"><svg class="i"><use href="#i-camera"/></svg></span>Report an issue</button>
+      <p class="hint">In my unit goes to Sunrise · common areas go to Dana</p>
+      <div class="stack" style="margin-top:9px">
+        <div class="issue gcard">
+          <div class="top"><b>Balcony door drainage</b><span class="pill info">In progress</span></div>
+          <span class="sub">Unit defect · waterproofer booked Thu 16 Jul</span>
+        </div>
+        <div class="issue gcard">
+          <div class="top"><b>Carpark gate sensor</b><span class="pill warn">With building</span></div>
+          <span class="sub">Common area · reported by 3 residents</span>
+        </div>
+        <div class="issue gcard">
+          <div class="top"><b>Ensuite grout cracking</b><span class="pill ok">Fixed</span></div>
+          <span class="sub">Confirm the fix to close</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 · Tab bar -->
+  <div class="slot">
+    <p class="label">Tab bar · a floating glass dock</p>
+    <div class="phone"><div class="wash green"></div>
+      <p style="font-size:11.5px;color:var(--ink-2);text-align:center;line-height:1.7;margin:auto 14px">Same four tabs as the house version. The building layer folds into existing surfaces rather than earning a fifth tab: notices arrive as nudges in Chat, building info lives inside House, common-area issues inside Issues, and building events land in Dates with a "from Dana" source tag.</p>
+      <div class="tabbar">
+        <div class="tab on"><span class="ic"><svg class="i"><use href="#i-chat"/></svg></span>Chat</div>
+        <div class="tab"><span class="ic"><svg class="i"><use href="#i-calendar"/></svg></span>Dates</div>
+        <div class="tab"><span class="ic"><svg class="i"><use href="#i-home"/></svg></span>House</div>
+        <div class="tab"><span class="ic"><svg class="i"><use href="#i-tool"/></svg></span>Issues</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="note">
+  <b>Icon system:</b> a single inline SVG sprite of 1.75px-stroke line icons, currentColor throughout, so every icon inherits its context's tint (coral in danger surfaces, teal for actions, ink elsewhere). No emoji, no icon fonts, no external requests. <b>Liquid glass rules:</b> ambient washes glow behind frosted panels · every surface is translucent white with backdrop blur and an inner light edge · the tab bar floats as a glass dock · reds and ambers appear as tinted glass · one saturated element per screen (the primary action).
+</footer>
+
+</body>
+</html>
