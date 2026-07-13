@@ -77,7 +77,7 @@ Note: the "Meet your home" tour was listed under Phase 1 in the original plan; D
 
 ## Week 4 - AI gateway v2
 
-- **P0.16 (L)** Gateway rebuild: per-request key resolution user key > org key > platform pool (all Vault-held), request logging (tenant, user, tokens, cost, latency), weighted-unit metering, per-user daily caps, org pool accounting (user-key traffic excluded from org pools). Cost model tracking fields per "Operating Cost Model v1.0" wired in here.
+- **P0.16 (L)** Gateway rebuild: per-request key resolution user key > org key > platform pool (all Vault-held), request logging (tenant, user, tokens, cost, latency), weighted-unit metering, per-user daily caps, org pool accounting (user-key traffic excluded from org pools). Cost model tracking fields per "Operating Cost Model v1.0" wired in here. Includes placing the platform Anthropic key into Supabase Vault with a validation ping (deferred here from P0.5, see `docs/infrastructure.md`).
 - **P0.17 (M)** Context assembler: builds system context from structured property profile + RAG retrieval (pgvector) scoped by the entitlement resolver. Prompt caching on the stable house profile block.
 - **P0.18 (M)** Guardrail layer: emergency keyword/vision pre-filters run before the LLM; no-liability response framing; global caps. Non-overridable regardless of key source.
 - **P0.19 (S)** Graceful-degrade states: 80% pool warning email, 100% pause UX, BYO key-failure pause + admin alert.
