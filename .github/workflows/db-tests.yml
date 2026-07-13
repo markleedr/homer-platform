@@ -41,8 +41,8 @@ jobs:
 
       - name: Stage /db into the CLI layout
         run: |
+          mkdir -p supabase/migrations supabase/tests
           cp db/migrations/*.sql supabase/migrations/
-          mkdir -p supabase/tests
           cp db/tests/*.sql supabase/tests/
 
       - name: Start Postgres and apply migrations
