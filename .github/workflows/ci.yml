@@ -1,0 +1,46 @@
+name: CI
+
+# Safety check on every proposed change and every push to main.
+# This must pass before a pull request can merge (branch protection enforces it).
+# Deploys are handled by Vercel's Git integration, not here, so no secrets live
+# in this workflow.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Cancel an in-progress run if new commits are pushed to the same branch.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Typecheck and build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      # Production dependencies only. Dev-tooling advisories (for example the
+      # Vite build chain) do not ship to users, so they are acknowledged but do
+      # not gate merges. A high-severity vulnerability in a shipped dependency
+      # fails the check.
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
