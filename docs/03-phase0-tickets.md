@@ -101,6 +101,7 @@ Note: the "Meet your home" tour was listed under Phase 1 in the original plan; D
 - **P0.26 (M)** Notifications skeleton: event bus table + workers for push (PWA), email (Resend or similar), templated payloads per event type carrying a source tag (org / building manager / system), homeowner preference centre, quiet hours. SMS stubbed (provider decision deferred - Twilio shortlisted).
 - **P0.27 (S)** PWA housekeeping: manifest/service-worker updates for the new shell, install prompts, offline shell for reference content (shut-offs must work offline).
 - **P0.28 (M)** **Data-isolation audit** (full pass per the audit skill) + fix window. Hard gate.
+- **P0.28b (S)** Enable PITR on `homer-production` before any external pilot home's data lands. Deferred from P0.4 as a cost decision (13 July 2026); free daily backups cover Phase 0 while 18 Silky Oak is the only tenant. See `docs/infrastructure.md`.
 - **P0.29 (S)** Phase 0 review: cost metering readout, performance pass, backlog groom into Phase 1 (defect Sprints 1–3, portal build).
 
 **Exit check / Phase 0 done means:** two tenants, four auth planes, isolation audit green, Silky Oak fully migrated and daily-usable by you and Beck, one fake builder org with a template-provisioned home, chat costing what the metering says it costs, and deploys taking minutes.
