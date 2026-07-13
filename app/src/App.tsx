@@ -10,7 +10,7 @@ export function App() {
       <p className="shell-eyebrow">Homeowner app</p>
       <h1 className="shell-title">{PRODUCT_NAME}</h1>
       <p className="shell-note">
-        Scaffold is live. Chat, Dates and House arrive as the build progresses.
+        Scaffold is live and the deploy pipeline is proven. Chat, Dates and House arrive as the build progresses.
       </p>
     </main>
   );
