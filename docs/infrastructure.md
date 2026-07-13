@@ -33,7 +33,15 @@ password are server-only secrets and are never committed.
   AI keys (CLAUDE.md rule 3).
 - **pgvector** (`vector`) available for in-database RAG (enabled with the schema
   in P0.6, not before).
-- **pgTAP** available for the RLS test suite (P0.7).
+- **pgTAP** available for the RLS test suite (P0.7). Installed on `homer-staging`
+  for ad-hoc runs; deliberately not installed on `homer-production` (a test-only
+  tool). The suite lives in `db/tests` and runs automatically in CI via the
+  `DB RLS tests` workflow, which boots a real Supabase Postgres stack with the
+  migrations applied and runs pgTAP against it. This is the automated form of the
+  rule 10 isolation audit. Canonical migrations and tests stay in `/db`; the CI
+  job generates a throwaway Supabase CLI scaffold and copies `/db` into it, so the
+  locked monorepo layout is unchanged. Promote the workflow to a required status
+  check in branch protection once it has gone green on a PR.
 
 ### Backups and recovery
 

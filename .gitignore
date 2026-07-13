@@ -13,6 +13,10 @@ build/
 # Vercel
 .vercel/
 
+# Supabase CLI working directory. Canonical migrations and tests live in /db;
+# the CLI scaffold is generated in CI (supabase init) and never committed.
+/supabase/
+
 # Logs
 *.log
 npm-debug.log*
