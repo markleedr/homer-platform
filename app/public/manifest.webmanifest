@@ -1,0 +1,10 @@
+{
+  "name": "Homer",
+  "short_name": "Homer",
+  "description": "Your home, and everything it knows.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fbfcfe",
+  "theme_color": "#fbfcfe",
+  "icons": []
+}
