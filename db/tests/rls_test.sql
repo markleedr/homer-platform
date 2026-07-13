@@ -112,20 +112,21 @@ select is((select count(*) from public.chats)::int, 1,
 select is((select count(*) from public.chat_messages)::int, 1,
   'A owner sees their own chat message');
 
--- Org-layer docs are read-only to the owner (rule 7): update affects zero rows.
+-- Org-layer docs are read-only to the owner (rule 7): the update matches no
+-- rows under RLS, so the title stays unchanged.
+update public.documents set title = 'owner attempt'
+  where id = '0d0c0000-0000-0000-0000-000000000000';
 select is(
-  (with upd as (
-     update public.documents set title = 'hacked'
-     where id = '0d0c0000-0000-0000-0000-000000000000' returning 1)
-   select count(*) from upd)::int, 0,
+  (select title from public.documents where id = '0d0c0000-0000-0000-0000-000000000000'),
+  'A org doc',
   'A owner cannot update an org-layer doc');
 
 -- Owner can edit their own owner-layer doc.
+update public.documents set title = 'my receipt v2'
+  where id = '0d00e000-0000-0000-0000-000000000000';
 select is(
-  (with upd as (
-     update public.documents set title = 'my receipt v2'
-     where id = '0d00e000-0000-0000-0000-000000000000' returning 1)
-   select count(*) from upd)::int, 1,
+  (select title from public.documents where id = '0d00e000-0000-0000-0000-000000000000'),
+  'my receipt v2',
   'A owner can update their own owner-layer doc');
 
 -- Owner cannot provision a property (org admin only): RLS blocks the insert.
@@ -181,11 +182,11 @@ select is((select count(*) from public.appliances)::int, 1,
   'org A admin sees org A appliances');
 
 -- Archive immutability: even org admin cannot update a locked doc.
+update public.documents set title = 'tampered'
+  where id = '0d10c000-0000-0000-0000-000000000000';
 select is(
-  (with upd as (
-     update public.documents set title = 'tampered'
-     where id = '0d10c000-0000-0000-0000-000000000000' returning 1)
-   select count(*) from upd)::int, 0,
+  (select title from public.documents where id = '0d10c000-0000-0000-0000-000000000000'),
+  'A locked archive doc',
   'org A admin cannot update a locked archive doc');
 
 -- Org admin can provision a property in their own org.
