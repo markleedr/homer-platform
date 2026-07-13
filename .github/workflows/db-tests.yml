@@ -1,0 +1,52 @@
+name: DB RLS tests
+
+# Runs the pgTAP suite (db/tests) against a real Supabase Postgres stack with the
+# migrations applied. This is the automated form of the data-isolation audit
+# (CLAUDE.md rule 10): every change that touches a tenant-keyed table is proved,
+# positive and negative, before it can land.
+#
+# Canonical migrations and tests live in /db. The Supabase CLI expects them under
+# supabase/, so this job generates a throwaway CLI scaffold (supabase init) and
+# copies /db into it. Nothing under supabase/ is committed (see .gitignore); /db
+# stays the single source of truth, so the locked monorepo layout holds.
+#
+# This runs on every PR and on pushes to main. It is intentionally a separate
+# workflow from ci.yml: promote it to a required status check in branch
+# protection once it has gone green on a PR.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: db-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rls:
+    name: pgTAP RLS suite
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Scaffold a throwaway CLI project
+        run: supabase init
+
+      - name: Stage /db into the CLI layout
+        run: |
+          cp db/migrations/*.sql supabase/migrations/
+          mkdir -p supabase/tests
+          cp db/tests/*.sql supabase/tests/
+
+      - name: Start Postgres and apply migrations
+        run: supabase db start
+
+      - name: Run the pgTAP suite
+        run: supabase test db

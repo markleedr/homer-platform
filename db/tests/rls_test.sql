@@ -11,10 +11,14 @@
 -- checked both ways: the right user sees or writes its row, and no user reaches
 -- across the tenant boundary.
 --
--- Run by the Supabase test runner (supabase test db) or pg_prove. Assumes pgTAP
--- is available, which it is on Supabase and in the CI database.
+-- Run by the Supabase test runner (supabase test db) or pg_prove against a
+-- database with the migrations applied. This file only ever runs against an
+-- ephemeral test database, never staging or production, so it enables pgTAP
+-- itself to stay self-contained.
 --
 -- No em dashes anywhere, including these comments.
+
+create extension if not exists pgtap with schema extensions;
 
 begin;
 select plan(30);
