@@ -2,11 +2,13 @@ import { useState } from "react";
 import { AUTH_BYPASS_ENABLED, PRODUCT_NAME } from "./config";
 import { useAuth } from "./auth/AuthProvider";
 import { SignIn } from "./auth/SignIn";
+import { GlassPanel } from "./ui/GlassPanel";
+import { Button } from "./ui/Button";
 
-// P0.11 gate: no session shows the sign-in screen; a session shows the app
-// shell. The real homeowner tabs (Chat, Dates, House) and the liquid glass
-// component library land in later tickets (P0.24b, P0.25); the shell stays
-// deliberately bare so the design system is built once, on-brand.
+// P0.11 gate + P0.24b shell: no session shows the sign-in screen; a session
+// shows the app shell on the liquid glass surface. The real homeowner tabs
+// (Chat, Dates, House) land with P0.25; the shell stays deliberately light so
+// the design system is proven once, on-brand.
 export function App() {
   const { session, user, loading, signOut } = useAuth();
 
@@ -18,9 +20,11 @@ export function App() {
   if (loading) {
     return (
       <main className="shell">
-        <p className="shell-eyebrow">Homeowner app</p>
-        <h1 className="shell-title">{PRODUCT_NAME}</h1>
-        <p className="shell-note">Loading your home.</p>
+        <GlassPanel className="panel">
+          <p className="shell-eyebrow">Homeowner app</p>
+          <h1 className="shell-title">{PRODUCT_NAME}</h1>
+          <p className="shell-note">Loading your home.</p>
+        </GlassPanel>
       </main>
     );
   }
@@ -37,28 +41,30 @@ export function App() {
 
   return (
     <main className="shell">
-      <p className="shell-eyebrow">Homeowner app</p>
-      <h1 className="shell-title">{PRODUCT_NAME}</h1>
-      {inDemo && (
-        <p className="demo-banner" role="status">
-          Demo mode: sign-in is bypassed. There is no real session, so your house
-          data will not load.
+      <GlassPanel className="panel">
+        <p className="shell-eyebrow">Homeowner app</p>
+        <h1 className="shell-title">{PRODUCT_NAME}</h1>
+        {inDemo && (
+          <p className="demo-banner" role="status">
+            Demo mode: sign-in is bypassed. There is no real session, so your
+            house data will not load.
+          </p>
+        )}
+        <p className="shell-note">
+          Signed in as {email}. Chat, Dates and House arrive as the build
+          progresses.
         </p>
-      )}
-      <p className="shell-note">
-        Signed in as {email}. Chat, Dates and House arrive as the build
-        progresses.
-      </p>
-      <button
-        className="auth-button auth-button-ghost"
-        type="button"
-        onClick={() => {
-          setDemoEmail(null);
-          void signOut();
-        }}
-      >
-        Sign out
-      </button>
+        <Button
+          variant="ghost"
+          icon="logout"
+          onClick={() => {
+            setDemoEmail(null);
+            void signOut();
+          }}
+        >
+          Sign out
+        </Button>
+      </GlassPanel>
     </main>
   );
 }

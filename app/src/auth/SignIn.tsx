@@ -13,6 +13,8 @@
 import { useState, type FormEvent } from "react";
 import { supabase } from "../lib/supabase";
 import { PRODUCT_NAME } from "../config";
+import { GlassPanel } from "../ui/GlassPanel";
+import { Button } from "../ui/Button";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -55,55 +57,61 @@ export function SignIn({ onBypass }: { onBypass?: (email: string) => void }) {
   if (status === "sent") {
     return (
       <main className="shell">
-        <p className="shell-eyebrow">{PRODUCT_NAME}</p>
-        <h1 className="shell-title">Check your email</h1>
-        <p className="shell-note">
-          We sent a sign-in link to {email}. Open it on this device to continue.
-        </p>
+        <GlassPanel className="panel">
+          <p className="shell-eyebrow">{PRODUCT_NAME}</p>
+          <h1 className="shell-title">Check your email</h1>
+          <p className="shell-note">
+            We sent a sign-in link to {email}. Open it on this device to
+            continue.
+          </p>
+        </GlassPanel>
       </main>
     );
   }
 
   return (
     <main className="shell">
-      <p className="shell-eyebrow">{PRODUCT_NAME}</p>
-      <h1 className="shell-title">Sign in</h1>
-      <p className="shell-note">
-        Enter your email and we will send you a secure sign-in link. No password
-        needed.
-      </p>
-      <form className="auth-form" onSubmit={onSubmit}>
-        <label className="auth-label" htmlFor="auth-email">
-          Email
-        </label>
-        <input
-          id="auth-email"
-          className="auth-input"
-          type="email"
-          inputMode="email"
-          autoComplete="email"
-          required
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          placeholder="you@example.com"
-        />
-        <button
-          className="auth-button"
-          type="submit"
-          disabled={status === "sending"}
-        >
-          {onBypass
-            ? "Continue"
-            : status === "sending"
-              ? "Sending"
-              : "Send sign-in link"}
-        </button>
-        {status === "error" && (
-          <p className="auth-error" role="alert">
-            {errorText || "Something went wrong. Please try again."}
-          </p>
-        )}
-      </form>
+      <GlassPanel className="panel">
+        <p className="shell-eyebrow">{PRODUCT_NAME}</p>
+        <h1 className="shell-title">Sign in</h1>
+        <p className="shell-note">
+          Enter your email and we will send you a secure sign-in link. No
+          password needed.
+        </p>
+        <form className="auth-form" onSubmit={onSubmit}>
+          <label className="auth-label" htmlFor="auth-email">
+            Email
+          </label>
+          <input
+            id="auth-email"
+            className="auth-input"
+            type="email"
+            inputMode="email"
+            autoComplete="email"
+            required
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="you@example.com"
+          />
+          <Button
+            variant="primary"
+            type="submit"
+            icon={onBypass ? undefined : "mail"}
+            disabled={status === "sending"}
+          >
+            {onBypass
+              ? "Continue"
+              : status === "sending"
+                ? "Sending"
+                : "Send sign-in link"}
+          </Button>
+          {status === "error" && (
+            <p className="auth-error" role="alert">
+              {errorText || "Something went wrong. Please try again."}
+            </p>
+          )}
+        </form>
+      </GlassPanel>
     </main>
   );
 }

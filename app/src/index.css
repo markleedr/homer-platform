@@ -1,9 +1,9 @@
-/* Minimal scaffold styling only. The liquid glass design language (PRD 8e) and
-   the shared component library land in P0.24b. This is a plain, on-brand-adjacent
-   holding shell, not the real look. */
+/* App-level layout. Design tokens and component styles live in ui/tokens.css and
+   ui/ui.css; this file positions the shell and styles the auth form fields. */
+
 :root {
   color-scheme: light;
-  font-family: -apple-system, "SF Pro", "Avenir Next", system-ui, sans-serif;
+  font-family: "Avenir Next", "SF Pro Text", "Segoe UI", system-ui, sans-serif;
 }
 
 html,
@@ -14,8 +14,8 @@ body,
 }
 
 body {
-  background: #fbfcfe;
-  color: #1c2530;
+  color: var(--ink);
+  /* the ambient wash comes from the .atmosphere class added in main.tsx */
 }
 
 .shell {
@@ -23,107 +23,93 @@ body {
   display: grid;
   align-content: center;
   justify-items: center;
-  gap: 8px;
   padding: 24px;
   text-align: center;
 }
 
+/* The floating glass card. Layout only; .glass (from GlassPanel) adds the frost. */
+.panel {
+  width: 100%;
+  max-width: 340px;
+  padding: 26px 22px;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
 .shell-eyebrow {
   margin: 0;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #6b7683;
+  color: var(--ink-3);
 }
 
 .shell-title {
-  margin: 0;
-  font-size: 40px;
+  margin: 2px 0 0;
+  font-size: 34px;
   font-weight: 600;
   letter-spacing: -0.01em;
+  color: var(--ink);
 }
 
 .shell-note {
-  margin: 0;
-  max-width: 32ch;
-  font-size: 15px;
-  color: #6b7683;
+  margin: 6px 0 0;
+  max-width: 30ch;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-2);
 }
 
-/* Sign-in form. Plain holding styles that sit with the scaffold shell; the
-   liquid glass treatment (PRD 8e) lands with the component library in P0.24b. */
 .auth-form {
   display: grid;
   gap: 10px;
   width: 100%;
-  max-width: 320px;
-  margin-top: 12px;
+  margin-top: 14px;
   text-align: left;
 }
 
 .auth-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: #6b7683;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-2);
 }
 
 .auth-input {
   width: 100%;
   box-sizing: border-box;
-  padding: 11px 14px;
+  padding: 12px 14px;
   font: inherit;
   font-size: 15px;
-  color: #1c2530;
-  background: #ffffff;
-  border: 1px solid #d3dae2;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--glass-line);
   border-radius: 12px;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 
 .auth-input:focus {
   outline: none;
-  border-color: #2f9e8f;
-  box-shadow: 0 0 0 3px rgba(47, 158, 143, 0.18);
-}
-
-.auth-button {
-  padding: 11px 16px;
-  font: inherit;
-  font-size: 15px;
-  font-weight: 600;
-  color: #ffffff;
-  background: #2f9e8f;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.auth-button:disabled {
-  opacity: 0.6;
-  cursor: default;
-}
-
-.auth-button-ghost {
-  margin-top: 12px;
-  color: #2f9e8f;
-  background: transparent;
-  border: 1px solid #cfe0dc;
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px var(--teal-soft);
 }
 
 .auth-error {
   margin: 0;
   font-size: 13px;
-  color: #c0564a;
+  color: var(--coral);
 }
 
-/* Temporary: shown only when the auth bypass is active (see config.ts). */
 .demo-banner {
   margin: 0;
   max-width: 34ch;
-  padding: 8px 12px;
-  font-size: 13px;
-  color: #8a6d1a;
-  background: rgba(226, 185, 60, 0.14);
-  border: 1px solid rgba(226, 185, 60, 0.4);
-  border-radius: 10px;
+  padding: 9px 13px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--amber);
+  background: var(--amber-soft);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
 }
