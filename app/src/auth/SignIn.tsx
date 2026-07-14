@@ -16,13 +16,22 @@ import { PRODUCT_NAME } from "../config";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
-export function SignIn() {
+// onBypass is only passed when the temporary auth bypass is enabled (see
+// config.ts). When set, submitting enters the app instead of sending a link.
+export function SignIn({ onBypass }: { onBypass?: (email: string) => void }) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [errorText, setErrorText] = useState("");
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    // Temporary bypass: enter the app without contacting Supabase.
+    if (onBypass) {
+      onBypass(email.trim());
+      return;
+    }
+
     setStatus("sending");
     setErrorText("");
 
@@ -83,7 +92,11 @@ export function SignIn() {
           type="submit"
           disabled={status === "sending"}
         >
-          {status === "sending" ? "Sending" : "Send sign-in link"}
+          {onBypass
+            ? "Continue"
+            : status === "sending"
+              ? "Sending"
+              : "Send sign-in link"}
         </button>
         {status === "error" && (
           <p className="auth-error" role="alert">

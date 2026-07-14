@@ -115,3 +115,15 @@ body {
   font-size: 13px;
   color: #c0564a;
 }
+
+/* Temporary: shown only when the auth bypass is active (see config.ts). */
+.demo-banner {
+  margin: 0;
+  max-width: 34ch;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #8a6d1a;
+  background: rgba(226, 185, 60, 0.14);
+  border: 1px solid rgba(226, 185, 60, 0.4);
+  border-radius: 10px;
+}
