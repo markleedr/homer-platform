@@ -54,6 +54,27 @@ password are server-only secrets and are never committed.
   This is a conscious, cost-based deviation from PRD 8a's "PITR from day one",
   logged here and gated in `docs/03-phase0-tickets.md`.
 
+### Auth (P0.11)
+
+The homeowner app uses Supabase Auth with passwordless email magic links (owner
+sign-in for Demo 1; Google/Apple OAuth and household invites come later). The app
+side is code; two settings live in the Supabase dashboard per project and are not
+in this repo:
+
+- **Redirect allowlist:** the app sends the magic link with a redirect back to
+  its own origin, so each origin must be allowlisted under Auth > URL
+  Configuration: `http://localhost:5173` (local dev), the Vercel preview domain(s)
+  for `homer-staging`, and the production domain for `homer-production`. A link to
+  a non-allowlisted origin is rejected.
+- **Email delivery:** the built-in email sender is rate limited and is fine for
+  the two owner accounts in Demo 1. Custom SMTP (Resend is the notifications
+  provider shortlisted in P0.26) should be configured before any real cohort so
+  sign-in emails are reliable.
+
+Owner accounts (Mark and Beck) are created on first magic-link sign-in; linking
+them to 18 Silky Oak as `property_members` owners happens in the P0.11b seed,
+which reads their real user IDs.
+
 ## Environment variables and secrets (P0.5)
 
 The rule that protects tenant isolation: **anything prefixed `VITE_` is compiled

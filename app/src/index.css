@@ -1,9 +1,9 @@
-/* Minimal scaffold styling only. The liquid glass design language (PRD 8e) and
-   the shared component library land in P0.24b. This is a plain, on-brand-adjacent
-   holding shell, not the real look. */
+/* App-level layout. Design tokens and component styles live in ui/tokens.css and
+   ui/ui.css; this file positions the shell and styles the auth form fields. */
+
 :root {
   color-scheme: light;
-  font-family: -apple-system, "SF Pro", "Avenir Next", system-ui, sans-serif;
+  font-family: "Avenir Next", "SF Pro Text", "Segoe UI", system-ui, sans-serif;
 }
 
 html,
@@ -14,8 +14,8 @@ body,
 }
 
 body {
-  background: #fbfcfe;
-  color: #1c2530;
+  color: var(--ink);
+  /* the ambient wash comes from the .atmosphere class added in main.tsx */
 }
 
 .shell {
@@ -23,30 +23,81 @@ body {
   display: grid;
   align-content: center;
   justify-items: center;
-  gap: 8px;
   padding: 24px;
   text-align: center;
 }
 
+/* The floating glass card. Layout only; .glass (from GlassPanel) adds the frost. */
+.panel {
+  width: 100%;
+  max-width: 340px;
+  padding: 26px 22px;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
 .shell-eyebrow {
   margin: 0;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #6b7683;
+  color: var(--ink-3);
 }
 
 .shell-title {
-  margin: 0;
-  font-size: 40px;
+  margin: 2px 0 0;
+  font-size: 34px;
   font-weight: 600;
   letter-spacing: -0.01em;
+  color: var(--ink);
 }
 
 .shell-note {
-  margin: 0;
-  max-width: 32ch;
+  margin: 6px 0 0;
+  max-width: 30ch;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.auth-form {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  margin-top: 14px;
+  text-align: left;
+}
+
+.auth-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.auth-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  font: inherit;
   font-size: 15px;
-  color: #6b7683;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--glass-line);
+  border-radius: 12px;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px var(--teal-soft);
+}
+
+.auth-error {
+  margin: 0;
+  font-size: 13px;
+  color: var(--coral);
 }

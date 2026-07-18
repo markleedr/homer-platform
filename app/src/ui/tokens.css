@@ -1,0 +1,58 @@
+/* Liquid glass design tokens (PRD 8e), carried over from the Silky Oak app and
+   the reference prototype (docs/prototypes/homeowner-app.html). This is the one
+   place the palette and glass values live; components read these variables. */
+
+:root {
+  /* Ink (text) */
+  --ink: #182230;
+  --ink-2: rgba(24, 34, 48, 0.62);
+  --ink-3: rgba(24, 34, 48, 0.4);
+
+  /* Frosted white glass surfaces */
+  --glass: rgba(255, 255, 255, 0.58);
+  --glass-strong: rgba(255, 255, 255, 0.78);
+  --glass-line: rgba(255, 255, 255, 0.85);
+
+  /* Semantic colours, only ever used as tinted glass (never solid fills) */
+  --teal: #0e7d78;
+  --teal-soft: rgba(14, 125, 120, 0.13);
+  --coral: #c04a32;
+  --coral-soft: rgba(192, 74, 50, 0.13);
+  --amber: #9a6413;
+  --amber-soft: rgba(154, 100, 19, 0.15);
+  --green: #2f7040;
+  --green-soft: rgba(47, 112, 64, 0.14);
+
+  /* Radii */
+  --r-card: 16px;
+  --r-pill: 999px;
+  --r-btn: 14px;
+  --r-frame: 30px;
+
+  /* The one saturated element per screen: the primary action gradient */
+  --primary-grad: linear-gradient(135deg, #12938d, #0b6d68);
+  --primary-glow: 0 6px 18px rgba(14, 125, 120, 0.35);
+}
+
+/* Ambient colour wash. background-attachment fixed so the light feels
+   environmental, per PRD 8e. Reef teal, coral, sea green, faint violet over a
+   near-white base. */
+.atmosphere {
+  background:
+    radial-gradient(900px 600px at 8% -5%, rgba(64, 190, 220, 0.32), transparent 60%),
+    radial-gradient(800px 640px at 96% 12%, rgba(255, 166, 120, 0.3), transparent 62%),
+    radial-gradient(900px 700px at 50% 108%, rgba(120, 205, 170, 0.32), transparent 60%),
+    radial-gradient(600px 500px at 78% 78%, rgba(190, 160, 255, 0.2), transparent 65%),
+    linear-gradient(180deg, #f7fbfd, #eef4f6);
+  background-attachment: fixed;
+}
+
+/* backdrop-filter fallback. Mid-range Android that cannot blur gets a
+   higher-opacity white so panels read as soft, not broken (PRD 8e engineering
+   note). Ships with the component library, not as an afterthought. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root {
+    --glass: rgba(255, 255, 255, 0.9);
+    --glass-strong: rgba(255, 255, 255, 0.95);
+  }
+}
