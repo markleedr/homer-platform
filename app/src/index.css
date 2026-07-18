@@ -101,15 +101,3 @@ body {
   font-size: 13px;
   color: var(--coral);
 }
-
-.demo-banner {
-  margin: 0;
-  max-width: 34ch;
-  padding: 9px 13px;
-  font-size: 12.5px;
-  line-height: 1.45;
-  color: var(--amber);
-  background: var(--amber-soft);
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 12px;
-}
